@@ -72,6 +72,17 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDynamicContent(selectedTheme);
     });
 
+    // Accordion functionality
+    const accordionToggles = document.querySelectorAll('.accordion-toggle');
+    accordionToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+            toggle.setAttribute('aria-expanded', !isExpanded);
+            const content = toggle.nextElementSibling;
+            content.classList.toggle('open');
+        });
+    });
+
     function updateDynamicContent(theme) {
         // Dynamic Text Content
         const textElements = document.querySelectorAll('[data-text-terminal]');
