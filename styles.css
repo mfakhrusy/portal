@@ -1,8 +1,9 @@
 :root {
+    /* Default: System/Terminal Theme */
     --bg-color: #050505;
     --text-main: #e0e0e0;
     --text-muted: #6f7782;
-    --accent: #00f3ff; /* Cyber Cyan */
+    --accent: #00f3ff;
     --accent-dim: rgba(0, 243, 255, 0.1);
     --border-color: #333;
     --grid-line: rgba(255, 255, 255, 0.03);
@@ -10,13 +11,41 @@
     --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
     
     --scanline-color: rgba(0, 243, 255, 0.05);
+    
+    --btn-bg: transparent;
+    --btn-border: 1px solid var(--accent);
+    --btn-text: var(--accent);
+    
+    --card-bg: var(--bg-color);
+}
+
+/* Retro / Y2K Theme */
+[data-theme="retro"] {
+    --bg-color: #c0c0c0; /* Silver/Gray */
+    --text-main: #000000;
+    --text-muted: #444444;
+    --accent: #000080; /* Navy Blue */
+    --accent-dim: #dfdfdf;
+    --border-color: #808080;
+    --grid-line: transparent;
+    
+    --font-mono: 'Verdana', 'Arial', sans-serif; /* Not mono, but retro */
+    
+    /* Variables specific to 3D effects */
+    --bevel-light: #ffffff;
+    --bevel-dark: #404040;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    cursor: crosshair; /* Technical cursor */
+    cursor: default; /* Normal cursor for retro */
+}
+
+/* Override cursor for Terminal theme only */
+body:not([data-theme="retro"]) * {
+    cursor: crosshair;
 }
 
 body {
@@ -27,8 +56,10 @@ body {
     line-height: 1.5;
     overflow-x: hidden;
     min-height: 100vh;
-    
-    /* Grid Background */
+}
+
+/* Specific background for terminal */
+body:not([data-theme="retro"]) {
     background-image: 
         linear-gradient(var(--grid-line) 1px, transparent 1px),
         linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
@@ -36,7 +67,7 @@ body {
     background-position: center center;
 }
 
-/* Scanline Effect */
+/* Scanline Effect - Only in Terminal */
 .scanline-overlay {
     position: fixed;
     top: 0;
@@ -54,6 +85,11 @@ body {
     z-index: 9999;
     pointer-events: none;
     opacity: 0.3;
+    display: block;
+}
+
+[data-theme="retro"] .scanline-overlay {
+    display: none;
 }
 
 /* System Status Bar */
@@ -72,9 +108,16 @@ body {
     z-index: 100;
 }
 
+[data-theme="retro"] .system-status-bar {
+    background-color: #c0c0c0;
+    border-bottom: 2px solid #808080;
+    box-shadow: inset 1px 1px #fff, inset -1px -1px #404040; /* Bevel Out */
+}
+
 .status-left, .status-right {
     display: flex;
     gap: 2rem;
+    align-items: center;
 }
 
 .status-item {
@@ -92,10 +135,41 @@ body {
     animation: blink 2s infinite;
 }
 
+[data-theme="retro"] .indicator {
+    background-color: #00ff00; /* Green LED */
+    border: 1px solid #000;
+    border-radius: 0;
+}
+
 @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.3; }
 }
+
+/* Theme Button */
+.theme-btn {
+    background: var(--btn-bg);
+    border: var(--btn-border);
+    color: var(--btn-text);
+    padding: 2px 8px;
+    font-family: inherit;
+    font-size: 0.7rem;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+[data-theme="retro"] .theme-btn {
+    background: #c0c0c0;
+    border: 2px outset #fff;
+    border-right-color: #404040;
+    border-bottom-color: #404040;
+    color: #000;
+}
+
+[data-theme="retro"] .theme-btn:active {
+    border-style: inset;
+}
+
 
 .container {
     max-width: 1000px;
@@ -110,6 +184,14 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: -0.05em;
 }
 
+[data-theme="retro"] h1, 
+[data-theme="retro"] h2, 
+[data-theme="retro"] h3 {
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: bold;
+}
+
 a {
     color: var(--accent);
     text-decoration: none;
@@ -117,10 +199,19 @@ a {
     position: relative;
 }
 
-a:hover {
+body:not([data-theme="retro"]) a:hover {
     background-color: var(--accent);
     color: var(--bg-color);
 }
+
+[data-theme="retro"] a {
+    text-decoration: underline;
+    color: blue;
+}
+[data-theme="retro"] a:hover {
+    color: red;
+}
+
 
 /* Hero Section */
 .hero-section {
@@ -130,6 +221,13 @@ a:hover {
     position: relative;
     margin-bottom: 4rem;
     background: rgba(5, 5, 5, 0.8);
+}
+
+[data-theme="retro"] .hero-section {
+    background: #fff;
+    border: 2px solid #808080;
+    border-style: inset;
+    box-shadow: none;
 }
 
 .hero-section::before {
@@ -143,6 +241,14 @@ a:hover {
     font-size: 0.75rem;
 }
 
+[data-theme="retro"] .hero-section::before {
+    content: 'About Me';
+    background: #c0c0c0;
+    border: 1px solid #808080;
+    top: -12px;
+}
+
+
 .hero-section::after { /* Corner marker */
     content: '';
     position: absolute;
@@ -152,6 +258,10 @@ a:hover {
     height: 20px;
     border-right: 2px solid var(--accent);
     border-bottom: 2px solid var(--accent);
+}
+
+[data-theme="retro"] .hero-section::after {
+    display: none;
 }
 
 .intro-line {
@@ -164,6 +274,11 @@ a:hover {
     line-height: 1;
     margin-bottom: 0.5rem;
     color: var(--accent);
+}
+
+[data-theme="retro"] .name {
+    color: #000;
+    font-family: 'Times New Roman', serif;
 }
 
 .glitch-text {
@@ -182,6 +297,13 @@ a:hover {
     max-width: 600px;
     color: var(--text-muted);
     margin-bottom: 2rem;
+}
+
+[data-theme="retro"] .bio-block {
+    border-left: none;
+    background: #e0e0e0;
+    padding: 1rem;
+    border: 1px solid #808080;
 }
 
 .social-links {
@@ -203,9 +325,21 @@ section {
     padding-bottom: 0.5rem;
 }
 
+[data-theme="retro"] .section-header {
+    background: #000080; /* Win98 Title Bar */
+    padding: 5px 10px;
+    border: none;
+}
+
 .section-header h3 {
     font-size: 1.25rem;
     margin-right: 1rem;
+}
+
+[data-theme="retro"] .section-header h3 {
+    color: #fff;
+    font-size: 1rem;
+    margin: 0;
 }
 
 .section-line {
@@ -220,6 +354,10 @@ section {
     );
 }
 
+[data-theme="retro"] .section-line {
+    display: none;
+}
+
 /* Grid Layouts */
 .grid {
     display: grid;
@@ -228,6 +366,13 @@ section {
     background-color: var(--border-color); /* Creates the borders */
     border: 1px solid var(--border-color);
 }
+
+[data-theme="retro"] .grid {
+    gap: 1.5rem;
+    background: transparent;
+    border: none;
+}
+
 
 .card {
     background-color: var(--bg-color);
@@ -238,8 +383,20 @@ section {
     height: 100%;
 }
 
+[data-theme="retro"] .card {
+    background: #c0c0c0;
+    border: 2px outset #fff;
+    border-right-color: #404040;
+    border-bottom-color: #404040;
+    padding: 1rem;
+}
+
 .card:hover {
     background-color: var(--accent-dim);
+}
+
+[data-theme="retro"] .card:hover {
+    background-color: #c0c0c0;
 }
 
 .card-header {
@@ -248,6 +405,10 @@ section {
     align-items: center;
     margin-bottom: 1rem;
     color: var(--accent);
+}
+
+[data-theme="retro"] .card-header {
+    color: #000;
 }
 
 .card-icon {
@@ -271,15 +432,36 @@ section {
     letter-spacing: 0.1em;
 }
 
+[data-theme="retro"] .card-link {
+    background: #c0c0c0;
+    border: 1px outset #fff;
+    padding: 2px 5px;
+    text-align: center;
+    color: #000;
+    font-family: 'Tahoma', sans-serif;
+    font-size: 11px;
+    cursor: pointer;
+}
+
 /* Resume Table-ish Layout */
 .resume-container {
     border: 1px solid var(--border-color);
+}
+
+[data-theme="retro"] .resume-container {
+    border: 2px solid #808080;
+    border-style: inset;
+    background: #fff;
 }
 
 .resume-row {
     display: grid;
     grid-template-columns: 200px 1fr;
     border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="retro"] .resume-row {
+    border-bottom: 1px solid #808080;
 }
 
 .resume-row:last-child {
@@ -292,6 +474,13 @@ section {
     background: rgba(255, 255, 255, 0.02);
 }
 
+[data-theme="retro"] .resume-left {
+    background: #e0e0e0;
+    border-right: 1px solid #808080;
+    color: #000;
+}
+
+
 .resume-right {
     padding: 2rem;
 }
@@ -302,6 +491,12 @@ section {
     padding-left: 1.5rem;
     border-left: 1px solid var(--border-color);
 }
+
+[data-theme="retro"] .exp-item, 
+[data-theme="retro"] .edu-item {
+    border-left: 3px double #808080;
+}
+
 
 .exp-item::before, .edu-item::before {
     content: '>';
@@ -314,6 +509,14 @@ section {
     font-size: 0.8rem;
 }
 
+[data-theme="retro"] .exp-item::before, 
+[data-theme="retro"] .edu-item::before {
+    background: transparent;
+    color: #000;
+    content: '•';
+}
+
+
 .exp-header {
     display: flex;
     justify-content: space-between;
@@ -324,6 +527,11 @@ section {
     color: var(--accent);
     font-weight: 600;
 }
+
+[data-theme="retro"] .exp-role {
+    color: #000080;
+}
+
 
 .exp-date {
     font-family: var(--font-mono);
@@ -338,6 +546,10 @@ section {
     letter-spacing: 0.05em;
 }
 
+[data-theme="retro"] .exp-company {
+    font-weight: bold;
+}
+
 .exp-details li {
     list-style: none;
     margin-bottom: 0.4rem;
@@ -345,10 +557,22 @@ section {
     font-size: 0.95rem;
 }
 
+[data-theme="retro"] .exp-details li {
+    color: #000;
+}
+
 .exp-details li::before {
     content: '- ';
     color: var(--text-muted);
 }
+
+[data-theme="retro"] .exp-details li::before {
+    content: '';
+}
+[data-theme="retro"] .exp-details li {
+    list-style: disc inside;
+}
+
 
 .tech-tags span {
     display: inline-block;
@@ -360,10 +584,23 @@ section {
     color: var(--text-muted);
 }
 
+[data-theme="retro"] .tech-tags span {
+    border: 1px solid #808080;
+    background: #e0e0e0;
+    color: #000;
+    border-radius: 3px;
+}
+
 .tech-tags span:hover {
     border-color: var(--accent);
     color: var(--accent);
 }
+
+[data-theme="retro"] .tech-tags span:hover {
+    border-color: #000;
+    color: #000;
+}
+
 
 /* Footer */
 .terminal-footer {
@@ -375,12 +612,28 @@ section {
     color: var(--text-muted);
 }
 
+[data-theme="retro"] .terminal-footer {
+    border-top: 2px solid #808080;
+    border-style: groove;
+}
+
+
 .footer-cmd {
     background: #111;
     padding: 0.5rem 1rem;
     display: inline-block;
     margin-bottom: 1rem;
 }
+
+[data-theme="retro"] .footer-cmd {
+    background: #fff;
+    border: 1px solid #000;
+}
+
+[data-theme="retro"] .footer-cmd span {
+    color: #000 !important;
+}
+
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -393,6 +646,8 @@ section {
         padding: 1rem 2rem;
     }
     .name { font-size: 2rem; }
-    .status-right { display: none; }
+    .status-right { 
+        gap: 1rem;
+    }
     .grid { grid-template-columns: 1fr; }
 }

@@ -47,4 +47,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setInterval(updateClock, 1000);
     updateClock(); // Initial call
+
+
+    // THEME TOGGLE LOGIC
+    const themeBtn = document.getElementById('theme-toggle');
+    const body = document.body;
+    
+    // Check saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        body.setAttribute('data-theme', savedTheme);
+        updateThemeText(savedTheme);
+    } else {
+        updateThemeText('terminal');
+    }
+
+    themeBtn.addEventListener('click', () => {
+        const currentTheme = body.getAttribute('data-theme');
+        if (currentTheme === 'retro') {
+            body.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'terminal');
+            updateThemeText('terminal');
+        } else {
+            body.setAttribute('data-theme', 'retro');
+            localStorage.setItem('theme', 'retro');
+            updateThemeText('retro');
+        }
+    });
+
+    function updateThemeText(theme) {
+        if (theme === 'retro') {
+            themeBtn.textContent = "Switch to Terminal";
+        } else {
+            themeBtn.textContent = "[SWITCH_THEME_V2]";
+        }
+    }
 });
