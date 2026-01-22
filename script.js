@@ -2,23 +2,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dynamic Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Clip-Path Scroll Reveal Animation
-    function revealOnScroll() {
-        const reveals = document.querySelectorAll('.reveal:not(.revealed)');
+    // Clip-Path Scroll Reveal Animation using Intersection Observer
+    if ('IntersectionObserver' in window) {
+        const revealObserver = new IntersectionObserver(
+            (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            {
+                root: null,
+                rootMargin: '0px 0px -80px 0px',
+                threshold: 0
+            }
+        );
+
+        // Reveal elements already in viewport immediately, observe the rest
         const windowHeight = window.innerHeight;
-        
-        reveals.forEach(el => {
+        document.querySelectorAll('.reveal').forEach(el => {
             const rect = el.getBoundingClientRect();
-            const revealPoint = 100;
-            
-            if (rect.top < windowHeight - revealPoint) {
+            if (rect.top < windowHeight && rect.bottom > 0) {
                 el.classList.add('revealed');
+            } else {
+                revealObserver.observe(el);
             }
         });
+    } else {
+        // Fallback for older browsers
+        document.querySelectorAll('.reveal').forEach(el => {
+            el.classList.add('revealed');
+        });
     }
-
-    window.addEventListener('scroll', revealOnScroll, { passive: true });
-    revealOnScroll(); // Check on load
 
     // Console System Init
     console.log(
