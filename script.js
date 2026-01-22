@@ -2,6 +2,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dynamic Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    // Clip-Path Scroll Reveal Animation
+    function revealOnScroll() {
+        const reveals = document.querySelectorAll('.reveal:not(.revealed)');
+        const windowHeight = window.innerHeight;
+        
+        reveals.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            const revealPoint = 100;
+            
+            if (rect.top < windowHeight - revealPoint) {
+                el.classList.add('revealed');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', revealOnScroll, { passive: true });
+    revealOnScroll(); // Check on load
+
     // Console System Init
     console.log(
         "%c SYSTEM INITIALIZED. WELCOME, USER. ",
