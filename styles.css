@@ -936,6 +936,37 @@ section {
     color: #000 !important;
 }
 
+/* Divider Art Section */
+.divider-art {
+    padding: 3rem 0;
+    text-align: center;
+    overflow: hidden;
+    margin-bottom: 8rem;
+}
+
+.ascii-art {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    line-height: 1.2;
+    color: var(--text-muted);
+    opacity: 0.6;
+    margin: 0 auto;
+    display: inline-block;
+    letter-spacing: 0.1em;
+}
+
+[data-theme="terminal"] .ascii-art {
+    color: var(--accent);
+    opacity: 0.8;
+    text-shadow: 0 0 10px var(--accent);
+}
+
+[data-theme="retro"] .ascii-art {
+    color: #000080;
+    opacity: 1;
+    font-family: 'Courier New', monospace;
+}
+
 /* Clip-Path Scroll Reveal Animations */
 .reveal {
     opacity: 0;

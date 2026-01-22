@@ -68,6 +68,39 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start typing after a short delay
     setTimeout(typeText, 500);
 
+    // ASCII Art per theme
+    const asciiArt = {
+        simple: `
+    ╭──────────────────────────────────────╮
+    │                                      │
+    │   ◇ ─── ◇ ─── ◇ ─── ◇ ─── ◇ ─── ◇   │
+    │                                      │
+    ╰──────────────────────────────────────╯
+        `,
+        terminal: `
+┌──────────────────────────────────────────────────────┐
+│ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ │
+│ ░█▀▀░█▀█░█▀▄░█▀▀░░░█░░░█▀█░█▀█░█▀▄░▀█▀░█▀█░█▀▀░░░░░░ │
+│ ░█░░░█░█░█░█░█▀▀░░░█░░░█░█░█▀█░█░█░░█░░█░█░█░█░░░░░░ │
+│ ░▀▀▀░▀▀▀░▀▀░░▀▀▀░░░▀▀▀░▀▀▀░▀░▀░▀▀░░▀▀▀░▀░▀░▀▀▀░░░░░░ │
+│ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ │
+└──────────────────────────────────────────────────────┘
+        `,
+        retro: `
++---------------------------------------------+
+|  *  *  *  *  *  *  *  *  *  *  *  *  *  *  |
+|    ~~~~~  WELCOME TO MY WEBSITE  ~~~~~     |
+|  *  *  *  *  *  *  *  *  *  *  *  *  *  *  |
++---------------------------------------------+
+        `
+    };
+
+    const asciiElement = document.getElementById('ascii-art');
+    function updateAsciiArt(theme) {
+        asciiElement.textContent = asciiArt[theme] || asciiArt.simple;
+    }
+    updateAsciiArt('simple');
+
 
     // Real-time Clock
     const clockElement = document.getElementById('clock');
@@ -105,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // localStorage removed as requested
         updateDynamicContent(selectedTheme);
+        updateAsciiArt(selectedTheme);
     });
 
     // Accordion functionality
