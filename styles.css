@@ -1014,6 +1014,22 @@ section {
     color: #000 !important;
 }
 
+.footer-email {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--accent);
+    font-weight: 500;
+}
+
+[data-theme="terminal"] .footer-email {
+    color: var(--accent);
+}
+
+[data-theme="retro"] .footer-email {
+    color: #000080;
+    text-decoration: underline;
+}
+
 /* Divider Art Section */
 .divider-art {
     text-align: center;
