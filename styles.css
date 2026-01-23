@@ -771,9 +771,29 @@ section {
 
 .exp-date {
     color: var(--text-muted);
-    font-size: 0.85rem;
-    font-weight: 400;
+    font-size: 0.75rem;
+    font-weight: 500;
     white-space: nowrap;
+    background: var(--accent-dim);
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    letter-spacing: 0.02em;
+}
+
+[data-theme="terminal"] .exp-date {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}
+
+[data-theme="retro"] .exp-date {
+    background: #fff;
+    border: 1px inset #808080;
+    border-radius: 0;
+    color: #000080;
+    font-weight: 700;
 }
 
 .exp-company {
