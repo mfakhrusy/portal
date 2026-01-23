@@ -146,8 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const deltaY = e.clientY - robotCenterY;
             
             const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-            const moveX = (deltaX / Math.max(distance, 1)) * maxMove;
+            let moveX = (deltaX / Math.max(distance, 1)) * maxMove;
             const moveY = (deltaY / Math.max(distance, 1)) * maxMove;
+            
+            // Invert X when robot is flipped on left side
+            if (robot.classList.contains('side-left')) {
+                moveX = -moveX;
+            }
             
             pupils.forEach(pupil => {
                 pupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
