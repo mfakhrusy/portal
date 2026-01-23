@@ -44,19 +44,71 @@ document.addEventListener('DOMContentLoaded', () => {
     const robot = document.querySelector('.peeking-robot');
     if (robot) {
         let hideTimeout = null;
+        let isHiding = false;
+        
+        // Normal distribution random (Box-Muller transform)
+        const randomNormal = (mean = 0.5, stdDev = 0.15) => {
+            const u1 = Math.random();
+            const u2 = Math.random();
+            const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+            return Math.max(0.15, Math.min(0.85, mean + z * stdDev)); // Clamp 15%-85%
+        };
+        
+        const setSide = (side) => {
+            robot.classList.remove('side-left', 'side-right');
+            robot.classList.add(`side-${side}`);
+        };
+        
+        // Initialize on right side
+        setSide('right');
         
         const showRobot = (className = 'visible') => {
+            if (isHiding) return;
             clearTimeout(hideTimeout);
-            robot.classList.remove('peek', 'visible');
+            robot.classList.remove('peek', 'visible', 'hiding');
             robot.classList.add(className);
         };
         
         const hideRobot = (delay = 2000) => {
             clearTimeout(hideTimeout);
             hideTimeout = setTimeout(() => {
-                robot.classList.remove('peek', 'visible');
+                if (!isHiding) {
+                    robot.classList.remove('peek', 'visible');
+                }
             }, delay);
         };
+        
+        const teleportRobot = () => {
+            isHiding = true;
+            robot.classList.remove('peek', 'visible');
+            robot.classList.add('hiding');
+            
+            // After hide animation, teleport
+            setTimeout(() => {
+                // Random side
+                const newSide = Math.random() > 0.5 ? 'left' : 'right';
+                setSide(newSide);
+                
+                // Normal distribution Y position (15% - 85% of viewport)
+                const yPercent = randomNormal(0.5, 0.18) * 100;
+                robot.style.top = `${yPercent}%`;
+                
+                robot.classList.remove('hiding');
+                isHiding = false;
+                
+                // Peek after repositioning
+                setTimeout(() => {
+                    showRobot('peek');
+                    hideRobot(3000);
+                }, 800);
+            }, 500);
+        };
+        
+        // Click to teleport
+        robot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            teleportRobot();
+        });
         
         // Hover behavior
         robot.addEventListener('mouseenter', () => {
@@ -64,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         robot.addEventListener('mouseleave', () => {
-            hideRobot(1500); // Stay visible 1.5s after mouse leaves
+            hideRobot(1500);
         });
         
         // Initial peek after 3 seconds
@@ -75,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Random peek every 20-40 seconds
         setInterval(() => {
-            if (!robot.classList.contains('visible')) {
+            if (!robot.classList.contains('visible') && !isHiding) {
                 showRobot('peek');
                 hideRobot(3000);
             }
@@ -83,18 +135,16 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Eyes follow cursor
         const pupils = robot.querySelectorAll('.pupil');
-        const maxMove = 3; // Max pixels pupils can move
+        const maxMove = 3;
         
         document.addEventListener('mousemove', (e) => {
             const robotRect = robot.getBoundingClientRect();
             const robotCenterX = robotRect.left + robotRect.width / 2;
             const robotCenterY = robotRect.top + robotRect.height / 2;
             
-            // Calculate direction to cursor
             const deltaX = e.clientX - robotCenterX;
             const deltaY = e.clientY - robotCenterY;
             
-            // Normalize and clamp movement
             const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
             const moveX = (deltaX / Math.max(distance, 1)) * maxMove;
             const moveY = (deltaY / Math.max(distance, 1)) * maxMove;

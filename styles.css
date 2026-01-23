@@ -121,24 +121,62 @@ body {
 /* ===== PEEKING ROBOT ===== */
 .peeking-robot {
     position: fixed;
-    right: -70px;
+    right: -100px;
+    left: auto;
     top: 50%;
     transform: translateY(-50%);
     z-index: 50;
     color: var(--accent);
-    transition: right 0.6s cubic-bezier(0.4, 0, 0.9, 0.4); /* ease-in for hiding */
+    transition: right 0.6s cubic-bezier(0.4, 0, 0.9, 0.4),
+                left 0.6s cubic-bezier(0.4, 0, 0.9, 0.4),
+                top 0.3s ease-out;
     cursor: pointer;
-    margin-right: 16px; /* Account for scrollbar */
 }
 
-.peeking-robot.visible {
+.peeking-robot.side-right {
+    right: -100px;
+    left: auto;
+    margin-right: 16px;
+}
+
+.peeking-robot.side-left {
+    left: -100px;
+    right: auto;
+    margin-left: 16px;
+    transform: translateY(-50%) scaleX(-1); /* Flip to face inward */
+}
+
+.peeking-robot.visible.side-right {
     right: 0px;
-    transition: right 0.7s cubic-bezier(0.16, 1, 0.3, 1); /* smooth ease-out */
+    transition: right 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.peeking-robot.peek {
+.peeking-robot.visible.side-left {
+    left: 0px;
+    transition: left 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.peeking-robot.peek.side-right {
     right: -20px;
     transition: right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.peeking-robot.peek.side-left {
+    left: -20px;
+    transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.peeking-robot.hiding {
+    transition: right 0.4s cubic-bezier(0.4, 0, 1, 1),
+                left 0.4s cubic-bezier(0.4, 0, 1, 1);
+}
+
+.peeking-robot.hiding.side-right {
+    right: -120px;
+}
+
+.peeking-robot.hiding.side-left {
+    left: -120px;
 }
 
 .robot-head {
