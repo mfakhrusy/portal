@@ -37,6 +37,51 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // =============================================
+    // PEEKING ROBOT - Shy periodic peek
+    // =============================================
+    
+    const robot = document.querySelector('.peeking-robot');
+    if (robot) {
+        let hideTimeout = null;
+        
+        const showRobot = (className = 'visible') => {
+            clearTimeout(hideTimeout);
+            robot.classList.remove('peek', 'visible');
+            robot.classList.add(className);
+        };
+        
+        const hideRobot = (delay = 2000) => {
+            clearTimeout(hideTimeout);
+            hideTimeout = setTimeout(() => {
+                robot.classList.remove('peek', 'visible');
+            }, delay);
+        };
+        
+        // Hover behavior
+        robot.addEventListener('mouseenter', () => {
+            showRobot('visible');
+        });
+        
+        robot.addEventListener('mouseleave', () => {
+            hideRobot(1500); // Stay visible 1.5s after mouse leaves
+        });
+        
+        // Initial peek after 3 seconds
+        setTimeout(() => {
+            showRobot('peek');
+            hideRobot(2500);
+        }, 3000);
+        
+        // Random peek every 20-40 seconds
+        setInterval(() => {
+            if (!robot.classList.contains('visible')) {
+                showRobot('peek');
+                hideRobot(3000);
+            }
+        }, Math.random() * 20000 + 20000);
+    }
+
     // Console System Init
     console.log(
         "%c SYSTEM INITIALIZED. WELCOME, USER. ",
