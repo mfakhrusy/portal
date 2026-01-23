@@ -68,38 +68,115 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start typing after a short delay
     setTimeout(typeText, 500);
 
-    // ASCII Art per theme
-    const asciiArt = {
-        simple: `
-    ╭──────────────────────────────────────╮
-    │                                      │
-    │   ◇ ─── ◇ ─── ◇ ─── ◇ ─── ◇ ─── ◇   │
-    │                                      │
-    ╰──────────────────────────────────────╯
-        `,
-        terminal: `
-┌──────────────────────────────────────────────────────┐
-│ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ │
-│ ░█▀▀░█▀█░█▀▄░█▀▀░░░█░░░█▀█░█▀█░█▀▄░▀█▀░█▀█░█▀▀░░░░░░ │
-│ ░█░░░█░█░█░█░█▀▀░░░█░░░█░█░█▀█░█░█░░█░░█░█░█░█░░░░░░ │
-│ ░▀▀▀░▀▀▀░▀▀░░▀▀▀░░░▀▀▀░▀▀▀░▀░▀░▀▀░░▀▀▀░▀░▀░▀▀▀░░░░░░ │
-│ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ │
-└──────────────────────────────────────────────────────┘
-        `,
-        retro: `
-+---------------------------------------------+
-|  *  *  *  *  *  *  *  *  *  *  *  *  *  *  |
-|    ~~~~~  WELCOME TO MY WEBSITE  ~~~~~     |
-|  *  *  *  *  *  *  *  *  *  *  *  *  *  *  |
-+---------------------------------------------+
-        `
+    // Morphing ASCII Art System
+    const asciiShapes = {
+        simple: [
+            `    ╭────────────────────────────────╮    `,
+            `    │  ◇ ── ◇ ── ◇ ── ◇ ── ◇ ── ◇  │    `,
+            `    ╰────────────────────────────────╯    `,
+        ],
+        simple2: [
+            `    ─═══─═══─═══─═══─═══─═══─═══─    `,
+            `    ◆     ◇     ◆     ◇     ◆     ◇    `,
+            `    ─═══─═══─═══─═══─═══─═══─═══─    `,
+        ],
+        simple3: [
+            `    ╔══════════════════════════════╗    `,
+            `    ║  ░░▒▒▓▓██▓▓▒▒░░▒▒▓▓██▓▓▒▒░░  ║    `,
+            `    ╚══════════════════════════════╝    `,
+        ],
+        simple4: [
+            `    ○ ─ ○ ─ ○ ─ ○ ─ ○ ─ ○ ─ ○ ─ ○    `,
+            `    │   │   │   │   │   │   │   │    `,
+            `    ○ ─ ○ ─ ○ ─ ○ ─ ○ ─ ○ ─ ○ ─ ○    `,
+        ],
+        terminal: [
+            `┌────────────────────────────────────┐`,
+            `│ ▓▓▓ SYSTEM.ONLINE ▓▓▓ LOADING ▓▓▓ │`,
+            `└────────────────────────────────────┘`,
+        ],
+        terminal2: [
+            `╔════════════════════════════════════╗`,
+            `║ >>> INITIALIZING_MODULES... <<<   ║`,
+            `╚════════════════════════════════════╝`,
+        ],
+        terminal3: [
+            `┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓`,
+            `┃ [■■■■■■■■■■░░░░░░░░░░] 50% READY  ┃`,
+            `┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛`,
+        ],
+        retro: [
+            `+------------------------------------+`,
+            `|  * * * WELCOME TO MY PAGE * * *   |`,
+            `+------------------------------------+`,
+        ],
+        retro2: [
+            `#====================================# `,
+            `|    ~~~ BEST VIEWED AT 800x600 ~~~  |`,
+            `#====================================#`,
+        ],
+        retro3: [
+            `*------------------------------------*`,
+            `|  [HOME] [ABOUT] [LINKS] [GUESTBOOK]|`,
+            `*------------------------------------*`,
+        ],
     };
 
     const asciiElement = document.getElementById('ascii-art');
-    function updateAsciiArt(theme) {
-        asciiElement.textContent = asciiArt[theme] || asciiArt.simple;
+    let currentTheme = 'simple';
+    let currentShapeIndex = 0;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function getShapesForTheme(theme) {
+        const prefix = theme === 'simple' ? 'simple' : theme;
+        return Object.keys(asciiShapes)
+            .filter(key => key === prefix || key.startsWith(prefix))
+            .map(key => asciiShapes[key]);
     }
+
+    function morphToShape(newLines) {
+        if (prefersReducedMotion) {
+            asciiElement.textContent = newLines.join('\n');
+            return;
+        }
+
+        const container = asciiElement;
+        container.innerHTML = '';
+        
+        newLines.forEach((line, lineIndex) => {
+            const lineDiv = document.createElement('div');
+            lineDiv.className = 'ascii-line';
+            
+            [...line].forEach((char, charIndex) => {
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.className = 'ascii-char';
+                span.style.animationDelay = `${(lineIndex * line.length + charIndex) * 8}ms`;
+                lineDiv.appendChild(span);
+            });
+            
+            container.appendChild(lineDiv);
+        });
+    }
+
+    function cycleAsciiArt() {
+        const shapes = getShapesForTheme(currentTheme);
+        currentShapeIndex = (currentShapeIndex + 1) % shapes.length;
+        morphToShape(shapes[currentShapeIndex]);
+    }
+
+    function updateAsciiArt(theme) {
+        currentTheme = theme;
+        currentShapeIndex = 0;
+        const shapes = getShapesForTheme(theme);
+        morphToShape(shapes[0]);
+    }
+
     updateAsciiArt('simple');
+    
+    if (!prefersReducedMotion) {
+        setInterval(cycleAsciiArt, 5000);
+    }
 
 
     // Real-time Clock
