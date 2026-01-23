@@ -180,8 +180,19 @@ body {
 }
 
 .robot-head {
-    display: block;
+    display: none;
     filter: drop-shadow(-4px 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+.peeking-robot.show-normal .robot-normal,
+.peeking-robot.show-weird .robot-weird {
+    display: block;
+}
+
+.robot-weird {
+    filter: drop-shadow(-4px 4px 8px rgba(0, 0, 0, 0.15)) 
+            sepia(0.15) 
+            saturate(0.85);
 }
 
 .robot-hand {

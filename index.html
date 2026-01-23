@@ -37,37 +37,42 @@
             <path class="pincer-bottom" d="M18 18 Q24 14 22 6 L18 2" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/>
         </svg>
         
-        <!-- Robot Head -->
-        <svg class="robot-head" width="80" height="90" viewBox="0 0 80 90">
-            <!-- Antenna -->
+        <!-- Robot Head: Normal (symmetric) -->
+        <svg class="robot-head robot-normal" width="80" height="90" viewBox="0 0 80 90">
             <line x1="40" y1="0" x2="40" y2="12" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
             <circle cx="40" cy="4" r="4" fill="currentColor" class="antenna-dot"/>
-            
-            <!-- Head -->
             <rect x="8" y="14" width="64" height="56" rx="12" fill="currentColor" class="head-main"/>
-            
-            <!-- Face plate (darker inset) -->
             <rect x="14" y="20" width="52" height="44" rx="8" fill="var(--bg-color)" opacity="0.3"/>
-            
-            <!-- Eyes -->
             <g class="robot-eyes">
                 <ellipse cx="28" cy="38" rx="8" ry="10" fill="var(--bg-color)"/>
                 <ellipse cx="52" cy="38" rx="8" ry="10" fill="var(--bg-color)"/>
-                <!-- Pupils -->
                 <circle cx="25" cy="40" r="4" fill="currentColor" class="pupil"/>
                 <circle cx="49" cy="40" r="4" fill="currentColor" class="pupil"/>
             </g>
-            
-            <!-- Shy blush -->
             <ellipse cx="22" cy="52" rx="6" ry="3" fill="#ff6b6b" opacity="0.4" class="blush"/>
             <ellipse cx="58" cy="52" rx="6" ry="3" fill="#ff6b6b" opacity="0.4" class="blush"/>
-            
-            <!-- Mouth (small, shy) -->
             <path d="M 35 58 Q 40 62 45 58" stroke="var(--bg-color)" stroke-width="2" fill="none" stroke-linecap="round"/>
-            
-            <!-- Ear panels -->
             <rect x="0" y="30" width="8" height="20" rx="2" fill="currentColor" opacity="0.7"/>
             <rect x="72" y="30" width="8" height="20" rx="2" fill="currentColor" opacity="0.7"/>
+        </svg>
+        
+        <!-- Robot Head: Weird (asymmetric) -->
+        <svg class="robot-head robot-weird" width="80" height="90" viewBox="0 0 80 90">
+            <line x1="38" y1="0" x2="36" y2="12" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="38" cy="4" r="4" fill="currentColor" class="antenna-dot"/>
+            <path d="M 18 14 L 62 14 Q 72 14 72 26 L 72 58 Q 72 70 60 70 L 22 70 Q 8 70 8 60 L 8 28 Q 8 14 18 14 Z" fill="currentColor" class="head-main"/>
+            <path d="M 16 22 L 63 20 Q 66 20 66 24 L 65 60 Q 65 64 61 64 L 18 63 Q 14 63 14 59 L 15 26 Q 15 22 16 22 Z" fill="var(--bg-color)" opacity="0.3"/>
+            <g class="robot-eyes">
+                <ellipse cx="28" cy="36" rx="6" ry="8" fill="var(--bg-color)"/>
+                <ellipse cx="52" cy="38" rx="10" ry="11" fill="var(--bg-color)"/>
+                <circle cx="26" cy="37" r="3" fill="currentColor" class="pupil"/>
+                <circle cx="50" cy="40" r="5" fill="currentColor" class="pupil"/>
+            </g>
+            <ellipse cx="22" cy="48" rx="5" ry="2" fill="#ff6b6b" opacity="0.4" class="blush"/>
+            <ellipse cx="58" cy="54" rx="7" ry="3" fill="#ff6b6b" opacity="0.4" class="blush"/>
+            <path d="M 32 60 Q 38 64 42 62 Q 46 60 48 61" stroke="var(--bg-color)" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <rect x="0" y="28" width="8" height="18" rx="2" fill="currentColor" opacity="0.7"/>
+            <rect x="72" y="32" width="8" height="22" rx="3" fill="currentColor" opacity="0.7"/>
         </svg>
     </div>
 

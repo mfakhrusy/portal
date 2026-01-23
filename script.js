@@ -62,6 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initialize on right side
         setSide('right');
         
+        // Randomly choose robot variant
+        const setRandomVariant = () => {
+            robot.classList.remove('show-normal', 'show-weird');
+            robot.classList.add(Math.random() > 0.5 ? 'show-weird' : 'show-normal');
+        };
+        setRandomVariant();
+        
         const showRobot = (className = 'visible') => {
             if (isHiding) return;
             clearTimeout(hideTimeout);
@@ -96,7 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 robot.classList.remove('hiding');
                 isHiding = false;
                 
-                // Peek after repositioning
+                // Randomize variant and peek after repositioning
+                setRandomVariant();
                 setTimeout(() => {
                     showRobot('peek');
                     hideRobot(3000);
@@ -186,9 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Random Y position (20% - 80%)
                 const yPos = (Math.random() * 60 + 20);
                 
-                // Reset position
+                // Reset position and randomize variant
                 robot.classList.remove('side-left', 'side-right', 'peek', 'visible', 'hiding', 'crossing', 'crossing-left', 'crossing-right', 'stopped', 'vanish');
                 robot.classList.add(startSide, 'crossing', 'floating');
+                setRandomVariant();
                 robot.style.top = `${yPos}%`;
                 robot.style.transition = '';
                 
