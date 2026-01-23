@@ -270,17 +270,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // =============================================
-    // PORTAL GRID - Simple click to navigate
+    // PORTAL GRID - Simple click to navigate + 3D Tilt
     // =============================================
     
     const portalCards = document.querySelectorAll('.portal-card');
+    const tiltStrength = 15; // Max rotation in degrees
+    const glareOpacity = 0.15; // Glare effect intensity
     
     portalCards.forEach(card => {
+        // Add glare overlay element
+        const glare = document.createElement('div');
+        glare.className = 'card-glare';
+        card.appendChild(glare);
+        
         card.addEventListener('click', () => {
             const href = card.dataset.href;
             if (href) {
                 window.open(href, '_blank');
             }
+        });
+        
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            // Calculate rotation based on cursor position relative to center
+            const rotateX = ((e.clientY - centerY) / (rect.height / 2)) * -tiltStrength;
+            const rotateY = ((e.clientX - centerX) / (rect.width / 2)) * tiltStrength;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            
+            // Move glare based on cursor position
+            const glareX = ((e.clientX - rect.left) / rect.width) * 100;
+            const glareY = ((e.clientY - rect.top) / rect.height) * 100;
+            glare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,${glareOpacity}) 0%, transparent 60%)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            glare.style.background = 'transparent';
         });
     });
 

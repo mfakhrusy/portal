@@ -1240,6 +1240,21 @@ section {
     cursor: pointer;
     box-shadow: var(--card-shadow);
     height: 220px;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+.portal-card:hover {
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
+}
+
+.card-glare {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    border-radius: inherit;
 }
 
 .portal-card.revealed {
