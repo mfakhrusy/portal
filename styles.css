@@ -942,7 +942,8 @@ section {
     padding: 3rem 0;
     text-align: center;
     overflow: hidden;
-    margin-bottom: 8rem;
+    margin-bottom: 6rem;
+    margin-top: 2rem;
 }
 
 .ascii-art {

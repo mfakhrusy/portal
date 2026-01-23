@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (charIndex < textToType.length) {
             titleElement.textContent += textToType.charAt(charIndex);
             charIndex++;
-            setTimeout(typeText, 100); // Typing speed
+            setTimeout(typeText, 50); // Typing speed
         } else {
             // Blinking cursor effect after typing
             setInterval(() => {
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     titleElement.textContent = textToType + '_';
                 }
-            }, 800);
+            }, 400);
         }
     }
 
@@ -134,8 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
             .map(key => asciiShapes[key]);
     }
 
-    function morphToShape(newLines) {
-        if (prefersReducedMotion) {
+    function morphToShape(newLines, animate = true) {
+        if (prefersReducedMotion || !animate) {
             asciiElement.textContent = newLines.join('\n');
             return;
         }
@@ -165,14 +165,14 @@ document.addEventListener('DOMContentLoaded', () => {
         morphToShape(shapes[currentShapeIndex]);
     }
 
-    function updateAsciiArt(theme) {
+    function updateAsciiArt(theme, animate = true) {
         currentTheme = theme;
         currentShapeIndex = 0;
         const shapes = getShapesForTheme(theme);
-        morphToShape(shapes[0]);
+        morphToShape(shapes[0], animate);
     }
 
-    updateAsciiArt('simple');
+    updateAsciiArt('simple', false); // Initial load without animation
     
     if (!prefersReducedMotion) {
         setInterval(cycleAsciiArt, 5000);
