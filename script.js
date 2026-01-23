@@ -269,6 +269,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // =============================================
+    // PORTAL GRID - Simple click to navigate
+    // =============================================
+    
+    const portalCards = document.querySelectorAll('.portal-card');
+    
+    portalCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const href = card.dataset.href;
+            if (href) {
+                window.open(href, '_blank');
+            }
+        });
+    });
+
     function updateDynamicContent(theme) {
         // Dynamic Text Content
         const textElements = document.querySelectorAll('[data-text-terminal]');

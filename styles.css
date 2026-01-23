@@ -554,6 +554,7 @@ section {
     font-size: 0.9rem;
     font-weight: 500;
     color: var(--accent);
+    margin-top: auto;
 }
 
 [data-theme="terminal"] .card-link {
@@ -1097,8 +1098,283 @@ section {
 
 /* Stagger delays for grid children - 2 column layout */
 /* Column 1 (odd): animates first, Column 2 (even): waits for column 1 */
-.reveal-stagger > .revealed:nth-child(odd) { transition-delay: 0s; }
-.reveal-stagger > .revealed:nth-child(even) { transition-delay: 0.7s; }
+/* Only apply delay to clip-path for reveal animation, not hover effects */
+.reveal-stagger > .reveal:nth-child(odd) { transition-delay: 0s; }
+.reveal-stagger > .reveal:nth-child(even) { transition-delay: 0.7s; }
+.reveal-stagger > .revealed { transition-delay: 0s; }
+
+/* =============================================
+   PORTAL GRID - 2-Click Expansion Animation
+   ============================================= */
+
+.portal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    position: relative;
+}
+
+/* Placeholder holds space when card goes absolute */
+.portal-placeholder {
+    visibility: hidden;
+}
+
+.portal-card {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: var(--card-shadow);
+    height: 220px;
+}
+
+.portal-card.revealed {
+    transition: 
+        clip-path 0.7s cubic-bezier(0.77, 0, 0.175, 1),
+        opacity 0.3s ease,
+        transform 0.2s ease 0s,
+        box-shadow 0.2s ease 0s,
+        min-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-stagger > .portal-card.revealed:nth-child(even) {
+    transition: 
+        clip-path 0.7s cubic-bezier(0.77, 0, 0.175, 1) 0.7s,
+        opacity 0.3s ease 0.7s,
+        transform 0.2s ease 0s,
+        box-shadow 0.2s ease 0s,
+        min-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enable smooth grid repositioning - ease-out-quint */
+.portal-grid.has-expanded .portal-card {
+    transition: 
+        transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.3s ease,
+        min-height 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.portal-card:not(.expanded) {
+    transition-delay: 0ms;
+}
+
+.portal-card:not(.expanded):hover {
+    transition-delay: 0ms;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+}
+
+.portal-card.expanded {
+    transform: none;
+}
+
+[data-theme="terminal"] .portal-card {
+    border-radius: 0;
+    border: 1px solid var(--accent);
+}
+
+[data-theme="terminal"] .portal-card:hover {
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+}
+
+[data-theme="retro"] .portal-card {
+    border-radius: 0;
+    border: 2px outset #fff;
+    box-shadow: inset -1px -1px #404040;
+}
+
+.portal-card-inner {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 220px;
+    transition: opacity 0.3s ease;
+    position: relative;
+    z-index: 2;
+    background: var(--card-bg);
+    border-radius: inherit;
+}
+
+.portal-card-content {
+    flex: 1;
+    min-height: 0;
+}
+
+.portal-card-content h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+
+.portal-card-content p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.portal-video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    background: #000;
+    transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+    z-index: 1;
+}
+
+.portal-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.portal-video-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.portal-visit-text {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* ===== EXPANSION STATES ===== */
+
+/* Overlay expansion - single smooth animation */
+.portal-card.expand-right,
+.portal-card.expand-left {
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* When card is expanded, show video */
+.portal-card.expanded .portal-card-inner {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.portal-card.expanded .portal-video-container {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.3s ease 0.3s, visibility 0s linear 0s;
+}
+
+.portal-card.expanded .portal-visit-text {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.6s;
+}
+
+/* Other cards slide down when one expands */
+.portal-card.shifted-down {
+    transform: translateY(0);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Card that's being displaced - animate smoothly */
+.portal-grid.has-expanded .portal-card:not(.expanding-h):not(.expanding-v) {
+    transition: 
+        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.3s ease;
+}
+
+/* Pulse hint on hover for unexpanded cards */
+.portal-card:not(.expanded)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--accent);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.portal-card:not(.expanded):hover::after {
+    opacity: 0.5;
+    animation: pulse-border 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-border {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.2; transform: scale(1.02); }
+}
+
+/* Close button for expanded state */
+.portal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease;
+    z-index: 20;
+}
+
+.portal-card.expanded .portal-close {
+    opacity: 1;
+    transform: scale(1);
+    transition-delay: 0.5s;
+}
+
+.portal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+[data-theme="terminal"] .portal-close {
+    border-radius: 0;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .portal-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .portal-card.expanding-h,
+    .portal-card.expanding-v {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+    
+    /* On mobile, just expand in place */
+    .portal-card.expanded {
+        min-height: 300px;
+    }
+}
 
 /* Responsive */
 @media (max-width: 768px) {
