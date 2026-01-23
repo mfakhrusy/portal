@@ -201,6 +201,31 @@ body {
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shimmer sweep animation */
+.status-badge.open-to-work::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+    );
+    animation: shimmer 3s ease-in-out infinite;
+    animation-delay: 2s;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
 }
 
 .status-badge.open-to-work .indicator {
@@ -1485,10 +1510,28 @@ section {
 }
 
 @media (max-width: 540px) {
+    .system-status-bar {
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
     .status-left {
+        display: flex;
+        gap: 0.75rem;
+    }
+    
+    /* Keep badge and location, hide the rest */
+    .status-left .status-item:nth-child(n+3) {
         display: none;
     }
-    .system-status-bar {
-        justify-content: flex-end;
+    
+    /* Hide clock on mobile */
+    #clock {
+        display: none;
+    }
+    
+    .status-right {
+        gap: 0.5rem;
     }
 }
