@@ -1090,13 +1090,10 @@ section {
     clip-path: inset(0 0 0 0);
 }
 
-/* Stagger delays for grid children */
-.reveal-stagger > .revealed:nth-child(1) { transition-delay: 0s; }
-.reveal-stagger > .revealed:nth-child(2) { transition-delay: 0.1s; }
-.reveal-stagger > .revealed:nth-child(3) { transition-delay: 0.2s; }
-.reveal-stagger > .revealed:nth-child(4) { transition-delay: 0.15s; }
-.reveal-stagger > .revealed:nth-child(5) { transition-delay: 0.25s; }
-.reveal-stagger > .revealed:nth-child(6) { transition-delay: 0.35s; }
+/* Stagger delays for grid children - 2 column layout */
+/* Column 1 (odd): animates first, Column 2 (even): waits for column 1 */
+.reveal-stagger > .revealed:nth-child(odd) { transition-delay: 0s; }
+.reveal-stagger > .revealed:nth-child(even) { transition-delay: 0.7s; }
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -1150,6 +1147,9 @@ section {
         gap: 1rem;
     }
     .grid { grid-template-columns: 1fr; }
+    
+    /* Reset stagger delay for single column */
+    .reveal-stagger > .revealed:nth-child(even) { transition-delay: 0.15s; }
 }
 
 @media (max-width: 540px) {
