@@ -284,6 +284,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // =============================================
+    // MAGNETIC HOVER EFFECT - Social Links
+    // =============================================
+    
+    const magneticElements = document.querySelectorAll('.social-links a');
+    const magnetStrength = 0.4; // How strongly elements follow cursor (0-1)
+    const magnetRadius = 50; // Pixel radius of magnetic effect
+    
+    magneticElements.forEach(el => {
+        el.style.transition = 'transform 0.2s ease-out';
+        
+        el.addEventListener('mousemove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const deltaX = e.clientX - centerX;
+            const deltaY = e.clientY - centerY;
+            
+            const moveX = deltaX * magnetStrength;
+            const moveY = deltaY * magnetStrength;
+            
+            el.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+        
+        el.addEventListener('mouseleave', () => {
+            el.style.transform = 'translate(0, 0)';
+        });
+    });
+
     function updateDynamicContent(theme) {
         // Dynamic Text Content
         const textElements = document.querySelectorAll('[data-text-terminal]');
