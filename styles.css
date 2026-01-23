@@ -939,11 +939,12 @@ section {
 
 /* Divider Art Section */
 .divider-art {
-    padding: 3rem 0;
     text-align: center;
-    overflow: hidden;
     margin-bottom: 6rem;
     margin-top: 2rem;
+    /* Fixed height to prevent layout shift */
+    min-height: 180px;
+    position: relative;
 }
 
 .ascii-art {
@@ -952,9 +953,13 @@ section {
     line-height: 1.2;
     color: var(--text-muted);
     opacity: 0.6;
-    margin: 0 auto;
-    display: inline-block;
     letter-spacing: 0.1em;
+    /* Absolute positioning - won't affect layout */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
 }
 
 [data-theme="terminal"] .ascii-art {
