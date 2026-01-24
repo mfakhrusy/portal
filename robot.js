@@ -181,21 +181,20 @@
             }, 9000);
         };
         
-        // Click to stop, vanish, then reappear
+        // Click to jumpscare, then vanish and reappear
         robot.addEventListener('click', (e) => {
             e.stopPropagation();
             
-            // Stop movement immediately
             clearTimeout(crossingTimeout);
-            const currentLeft = robot.getBoundingClientRect().left;
-            robot.style.transition = 'none';
-            robot.style.left = `${currentLeft}px`;
-            robot.style.right = 'auto';
-            robot.classList.remove('crossing', 'crossing-left', 'crossing-right', 'floating');
-            robot.classList.add('stopped');
+            robot.style.transition = '';
+            robot.style.left = '';
+            robot.style.right = '';
+            robot.classList.remove('crossing', 'crossing-left', 'crossing-right', 'floating', 'stopped');
+            robot.classList.add('jumpscare');
             
-            // Vanish after 1 second
+            // Vanish after jumpscare
             setTimeout(() => {
+                robot.classList.remove('jumpscare');
                 robot.classList.add('vanish');
                 
                 // Reappear after vanish animation
@@ -203,7 +202,7 @@
                     resetRobot();
                     startCrossing();
                 }, 400);
-            }, 1000);
+            }, 800);
         });
         
         // Initial crossing after 4s
