@@ -1,4 +1,10 @@
 /* ===== PEEKING ROBOT ===== */
+
+/* Hide robot when hammer mode is active */
+/* body.hammer-mode .peeking-robot {
+    display: none !important;
+} */
+
 .peeking-robot {
     position: fixed;
     right: -100px;
@@ -174,13 +180,22 @@
         transform: translateY(-50%) scale(0.7) scaleX(-1);
     }
     
-    .peeking-robot.floating {
-        animation: float-bob 2s ease-in-out infinite;
+    .peeking-robot.floating.crossing-right {
+        animation: float-bob-right 2s ease-in-out infinite;
     }
     
-    @keyframes float-bob {
-        0%, 100% { margin-top: 0; }
-        50% { margin-top: -10px; }
+    .peeking-robot.floating.crossing-left {
+        animation: float-bob-left 2s ease-in-out infinite;
+    }
+    
+    @keyframes float-bob-right {
+        0%, 100% { transform: translateY(-50%) scale(0.7); }
+        50% { transform: translateY(calc(-50% - 10px)) scale(0.7); }
+    }
+    
+    @keyframes float-bob-left {
+        0%, 100% { transform: translateY(-50%) scale(0.7) scaleX(-1); }
+        50% { transform: translateY(calc(-50% - 10px)) scale(0.7) scaleX(-1); }
     }
     
     .peeking-robot.stopped {
