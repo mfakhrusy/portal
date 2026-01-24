@@ -1,7 +1,12 @@
 /**
- * Document Destroyer - Weapon Cache System
- * A fun interactive feature that lets users "destroy" the document with weapons
+ * Backpack Tool System
+ * A fun interactive feature with tools from the backpack
  */
+
+// Track active weapon and deployed cars
+let activeWeaponType = null;
+let deployedCars = [];
+let carCursorRotation = 0; // Captured rotation when car is selected
 
 document.addEventListener('DOMContentLoaded', () => {
     // Create the weapon cache UI
@@ -10,11 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create crack layer in the main container (so cracks scroll with content)
     createCrackLayer();
     
-    // Create custom hammer cursor element
+    // Create custom cursor elements
     createHammerCursor();
+    createCarCursor();
     
-    // Setup hammer mode
+    // Setup weapon modes
     setupHammerMode();
+    setupCarMode();
 });
 
 /**
@@ -27,6 +34,10 @@ function createWeaponCache() {
         <div class="weapon-tray">
             <div class="weapon-item" data-weapon="hammer" data-tooltip="Toy Hammer">
                 <img src="toy-hammer.png" alt="Hammer">
+            </div>
+            <div class="weapon-item" data-weapon="car" data-tooltip="Toy Car">
+                <img src="car-white.svg" alt="Car" class="car-icon">
+                <span class="car-recall-badge" style="display:none;">↩</span>
             </div>
         </div>
         <button class="cache-toggle" aria-label="Open weapon cache">
@@ -42,8 +53,8 @@ function createWeaponCache() {
     const toggleIcon = cache.querySelector('.cache-toggle-icon');
     
     toggle.addEventListener('click', () => {
-        // If in hammer mode, clicking toggle deactivates the weapon
-        if (document.body.classList.contains('hammer-mode')) {
+        // If in any weapon mode, clicking toggle deactivates the weapon
+        if (activeWeaponType) {
             deactivateWeapon();
             return;
         }
@@ -55,6 +66,13 @@ function createWeaponCache() {
     weapons.forEach(weapon => {
         weapon.addEventListener('click', () => {
             const weaponType = weapon.dataset.weapon;
+            
+            // Special case: if car is deployed and clicking car icon, recall all cars
+            if (weaponType === 'car' && deployedCars.length > 0) {
+                recallAllCars();
+                return;
+            }
+            
             activateWeapon(weaponType, weapon);
             cache.classList.remove('open');
         });
@@ -100,13 +118,29 @@ function createHammerCursor() {
  * Activate a weapon
  */
 function activateWeapon(weaponType, element) {
-    // Deactivate any current weapon
-    document.querySelectorAll('.weapon-item').forEach(w => w.classList.remove('active'));
+    // Deactivate any current weapon first
+    deactivateWeapon();
+    
+    activeWeaponType = weaponType;
+    element.classList.add('active');
+    document.body.style.userSelect = 'none';
     
     if (weaponType === 'hammer') {
-        element.classList.add('active');
         document.body.classList.add('hammer-mode');
-        document.body.style.userSelect = 'none';
+    } else if (weaponType === 'car') {
+        document.body.classList.add('car-mode');
+        // Capture current rotation of spinning car icon
+        const carIcon = document.querySelector('.weapon-item[data-weapon="car"] .car-icon');
+        if (carIcon) {
+            const style = getComputedStyle(carIcon);
+            const matrix = new DOMMatrix(style.transform);
+            carCursorRotation = Math.atan2(matrix.b, matrix.a) * (180 / Math.PI);
+        }
+        // Apply rotation to cursor
+        const carCursor = document.getElementById('car-cursor');
+        if (carCursor) {
+            carCursor.style.transform = `rotate(${carCursorRotation}deg)`;
+        }
     }
 }
 
@@ -114,7 +148,8 @@ function activateWeapon(weaponType, element) {
  * Deactivate current weapon
  */
 function deactivateWeapon() {
-    document.body.classList.remove('hammer-mode');
+    activeWeaponType = null;
+    document.body.classList.remove('hammer-mode', 'car-mode');
     document.querySelectorAll('.weapon-item').forEach(w => w.classList.remove('active'));
     document.body.style.userSelect = '';
 }
@@ -178,9 +213,9 @@ function setupHammerMode() {
         }, 150);
     });
     
-    // ESC to cancel weapon mode
+    // ESC to cancel weapon mode (shared handler)
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && document.body.classList.contains('hammer-mode')) {
+        if (e.key === 'Escape' && activeWeaponType) {
             deactivateWeapon();
         }
     });
@@ -312,4 +347,198 @@ function generateCrackSVG() {
     
     return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" 
                  style="overflow:visible">${glowFilter}${paths}</svg>`;
+}
+
+/**
+ * Create the custom car cursor element
+ */
+function createCarCursor() {
+    const car = document.createElement('img');
+    car.className = 'car-cursor';
+    car.id = 'car-cursor';
+    car.src = 'car-white.svg';
+    car.alt = '';
+    document.body.appendChild(car);
+}
+
+/**
+ * Setup car mode interactions
+ */
+function setupCarMode() {
+    const carCursor = document.getElementById('car-cursor');
+    
+    // Track mouse movement for custom cursor
+    document.addEventListener('mousemove', (e) => {
+        if (!document.body.classList.contains('car-mode')) return;
+        
+        carCursor.style.left = (e.pageX - 40) + 'px';
+        carCursor.style.top = (e.pageY - 20) + 'px';
+        carCursor.style.transform = `rotate(${carCursorRotation}deg)`;
+    });
+    
+    // Handle clicks - deploy a car
+    document.addEventListener('click', (e) => {
+        if (!document.body.classList.contains('car-mode')) return;
+        
+        // Don't trigger on UI elements
+        if (e.target.closest('.weapon-cache') || 
+            e.target.closest('.weapon-esc-hint') ||
+            e.target.closest('.system-status-bar')) {
+            return;
+        }
+        
+        // Deploy car at click position
+        deployCar(e.clientX, e.clientY);
+        
+        // Deactivate car mode after deploying
+        deactivateWeapon();
+        
+        // Update car icon to show recall badge
+        updateCarRecallBadge();
+    });
+}
+
+/**
+ * Deploy a bouncing car at position
+ */
+function deployCar(x, y) {
+    const car = document.createElement('div');
+    car.className = 'deployed-car';
+    car.innerHTML = '<img src="car-white.svg" alt="Car">';
+    car.style.left = x + 'px';
+    car.style.top = y + 'px';
+    car.style.transform = `rotate(${carCursorRotation}deg)`;
+    
+    document.body.appendChild(car);
+    
+    // Use captured rotation as initial direction (convert degrees to radians)
+    const speed = 3 + Math.random() * 2;
+    const angle = carCursorRotation * (Math.PI / 180);
+    let vx = Math.cos(angle) * speed;
+    let vy = Math.sin(angle) * speed;
+    
+    // Current position (viewport-relative for fixed positioning)
+    let posX = x;
+    let posY = y;
+    
+    // Track car data
+    const carData = {
+        element: car,
+        animationId: null
+    };
+    
+    deployedCars.push(carData);
+    
+    // Animation loop
+    function animate() {
+        // Update position
+        posX += vx;
+        posY += vy;
+        
+        // Bounce off edges with some energy retention
+        const carWidth = 80;
+        const carHeight = 40;
+        const bounceEnergy = 0.95;
+        
+        // Left/right bounds
+        if (posX < 0) {
+            posX = 0;
+            vx = -vx * bounceEnergy;
+            triggerBounceEffect(car, 'left');
+        } else if (posX > window.innerWidth - carWidth) {
+            posX = window.innerWidth - carWidth;
+            vx = -vx * bounceEnergy;
+            triggerBounceEffect(car, 'right');
+        }
+        
+        // Top/bottom bounds
+        if (posY < 0) {
+            posY = 0;
+            vy = -vy * bounceEnergy;
+            triggerBounceEffect(car, 'top');
+        } else if (posY > window.innerHeight - carHeight) {
+            posY = window.innerHeight - carHeight;
+            vy = -vy * bounceEnergy;
+            triggerBounceEffect(car, 'bottom');
+        }
+        
+        // Update car position and rotation based on velocity
+        const rotation = Math.atan2(vy, vx) * (180 / Math.PI);
+        car.style.left = posX + 'px';
+        car.style.top = posY + 'px';
+        car.style.transform = `rotate(${rotation}deg)`;
+        
+        carData.animationId = requestAnimationFrame(animate);
+    }
+    
+    carData.animationId = requestAnimationFrame(animate);
+}
+
+/**
+ * Trigger bounce effect on car
+ */
+function triggerBounceEffect(car, direction) {
+    car.classList.add('bouncing');
+    
+    // Add a little bump animation
+    let bumpX = 0, bumpY = 0;
+    if (direction === 'left') bumpX = 5;
+    if (direction === 'right') bumpX = -5;
+    if (direction === 'top') bumpY = 5;
+    if (direction === 'bottom') bumpY = -5;
+    
+    car.animate([
+        { transform: car.style.transform },
+        { transform: car.style.transform + ` translate(${bumpX}px, ${bumpY}px) scaleY(0.8)` },
+        { transform: car.style.transform }
+    ], {
+        duration: 150,
+        easing: 'ease-out'
+    });
+    
+    setTimeout(() => car.classList.remove('bouncing'), 150);
+}
+
+/**
+ * Update car icon to show/hide recall badge
+ */
+function updateCarRecallBadge() {
+    const carItem = document.querySelector('.weapon-item[data-weapon="car"]');
+    const badge = carItem?.querySelector('.car-recall-badge');
+    if (badge) {
+        badge.style.display = deployedCars.length > 0 ? 'flex' : 'none';
+    }
+    
+    // Update tooltip
+    if (carItem) {
+        carItem.dataset.tooltip = deployedCars.length > 0 ? 'Recall Cars' : 'Toy Car';
+    }
+}
+
+/**
+ * Recall all deployed cars
+ */
+function recallAllCars() {
+    deployedCars.forEach(carData => {
+        // Cancel animation
+        if (carData.animationId) {
+            cancelAnimationFrame(carData.animationId);
+        }
+        
+        // Animate car flying back to backpack
+        const car = carData.element;
+        const backpack = document.querySelector('.cache-toggle');
+        const backpackRect = backpack.getBoundingClientRect();
+        
+        car.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        car.style.left = backpackRect.left + 'px';
+        car.style.top = backpackRect.top + 'px';
+        car.style.transform = 'scale(0.3) rotate(720deg)';
+        car.style.opacity = '0';
+        
+        setTimeout(() => car.remove(), 400);
+    });
+    
+    deployedCars = [];
+    updateCarRecallBadge();
 }
