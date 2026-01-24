@@ -257,6 +257,16 @@ function generateCrackSVG() {
     const centerX = size / 2;
     const centerY = size / 2;
     
+    // Check if terminal theme is active
+    const isTerminalTheme = document.body.getAttribute('data-theme') === 'terminal';
+    
+    // Colors based on theme
+    const mainStroke = isTerminalTheme ? 'rgba(255, 50, 50, 0.9)' : 'rgba(0,0,0,0.7)';
+    const subStroke = isTerminalTheme ? 'rgba(255, 80, 80, 0.7)' : 'rgba(0,0,0,0.5)';
+    const fragFill = isTerminalTheme ? 'rgba(255, 50, 50, 0.5)' : 'rgba(0,0,0,0.3)';
+    const glowFilter = isTerminalTheme ? `<defs><filter id="glow"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>` : '';
+    const filterAttr = isTerminalTheme ? 'filter="url(#glow)"' : '';
+    
     // Generate random crack lines from center
     const numBranches = 4 + Math.floor(Math.random() * 4); // 4-7 branches
     let paths = '';
@@ -274,8 +284,8 @@ function generateCrackSVG() {
         const midY = centerY + Math.sin(angle) * (length * 0.5) + (Math.random() - 0.5) * 10;
         
         paths += `<path d="M ${centerX} ${centerY} L ${midX} ${midY} L ${endX} ${endY}" 
-                        stroke="rgba(0,0,0,0.7)" stroke-width="${1 + Math.random() * 2}" 
-                        fill="none" stroke-linecap="round"/>`;
+                        stroke="${mainStroke}" stroke-width="${1 + Math.random() * 2}" 
+                        fill="none" stroke-linecap="round" ${filterAttr}/>`;
         
         // Sub-branches
         if (Math.random() > 0.4) {
@@ -285,8 +295,8 @@ function generateCrackSVG() {
             const subEndY = midY + Math.sin(subAngle) * subLength;
             
             paths += `<path d="M ${midX} ${midY} L ${subEndX} ${subEndY}" 
-                            stroke="rgba(0,0,0,0.5)" stroke-width="${0.5 + Math.random()}" 
-                            fill="none" stroke-linecap="round"/>`;
+                            stroke="${subStroke}" stroke-width="${0.5 + Math.random()}" 
+                            fill="none" stroke-linecap="round" ${filterAttr}/>`;
         }
     }
     
@@ -297,9 +307,9 @@ function generateCrackSVG() {
         const fragSize = 2 + Math.random() * 4;
         
         paths += `<polygon points="${fragX},${fragY - fragSize} ${fragX + fragSize},${fragY + fragSize} ${fragX - fragSize},${fragY + fragSize/2}" 
-                          fill="rgba(0,0,0,0.3)"/>`;
+                          fill="${fragFill}" ${filterAttr}/>`;
     }
     
     return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" 
-                 style="overflow:visible">${paths}</svg>`;
+                 style="overflow:visible">${glowFilter}${paths}</svg>`;
 }
