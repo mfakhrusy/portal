@@ -16,8 +16,8 @@ let mouseY = 0;
 const MOUSE_HITBOX_RADIUS = 40; // Big cursor support
 const CAR_HITBOX_RADIUS = 40;
 const COLLISION_DISTANCE = MOUSE_HITBOX_RADIUS + CAR_HITBOX_RADIUS;
-const PANIC_DISTANCE = 150; // Fast avoidance zone
-const AWARENESS_DISTANCE = 250; // Gentle avoidance zone
+const PANIC_DISTANCE = 250; // Fast avoidance zone
+const AWARENESS_DISTANCE = 500; // Gentle avoidance zone
 const HAMMER_HIT_RADIUS = 60; // not so big and not so small hitbox
 
 document.addEventListener('DOMContentLoaded', () => {
