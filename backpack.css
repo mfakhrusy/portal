@@ -362,18 +362,6 @@ body.car-mode .weapon-esc-hint {
     border-radius: 0;
 }
 
-[data-theme="retro"] .weapon-cache .cache-toggle,
-[data-theme="retro"] .weapon-tray {
-    border-radius: 0;
-    border: 2px outset #fff;
-    box-shadow: inset 1px 1px #fff, inset -1px -1px #404040;
-}
-
-[data-theme="retro"] .weapon-item {
-    border-radius: 0;
-    border: 2px inset #fff;
-}
-
 /* Mobile: smaller weapon cache */
 @media (max-width: 768px) {
     .weapon-cache {

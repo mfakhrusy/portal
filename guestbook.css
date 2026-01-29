@@ -71,12 +71,6 @@
     box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
 }
 
-[data-theme="retro"] .guestbook-modal {
-    border-radius: 0;
-    border: 2px outset #fff;
-    box-shadow: inset 1px 1px #fff, inset -1px -1px #404040;
-}
-
 /* Modal Header */
 .guestbook-header {
     grid-column: 1 / -1;
@@ -101,15 +95,6 @@
     font-size: 1rem;
 }
 
-[data-theme="retro"] .guestbook-header {
-    background: #000080;
-    color: #fff;
-}
-
-[data-theme="retro"] .guestbook-header h2 {
-    color: #fff;
-}
-
 .guestbook-close {
     background: none;
     border: none;
@@ -123,10 +108,6 @@
 
 .guestbook-close:hover {
     color: var(--text-main);
-}
-
-[data-theme="retro"] .guestbook-close {
-    color: #fff;
 }
 
 /* Form Section (Left) */
@@ -206,12 +187,6 @@
     box-shadow: 0 0 10px var(--accent-dim);
 }
 
-[data-theme="retro"] .form-group input,
-[data-theme="retro"] .form-group textarea {
-    border-radius: 0;
-    border: 2px inset #fff;
-}
-
 .form-buttons {
     display: flex;
     gap: 0.5rem;
@@ -273,18 +248,6 @@
 
 [data-theme="terminal"] .guestbook-cancel {
     border-radius: 0;
-}
-
-[data-theme="retro"] .guestbook-submit {
-    border-radius: 0;
-    border: 2px outset #fff;
-    background: #c0c0c0;
-    color: #000;
-}
-
-[data-theme="retro"] .guestbook-cancel {
-    border-radius: 0;
-    border: 2px outset #fff;
 }
 
 /* User's Entry Display */

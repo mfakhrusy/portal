@@ -27,6 +27,7 @@
 </head>
 <body>
     <div class="scanline-overlay"></div>
+    <div class="noise-overlay" aria-hidden="true"></div>
 
     <!-- Shy Peeking Robot -->
     <div class="peeking-robot" aria-hidden="true">
@@ -101,7 +102,6 @@
                 <select id="theme-select" class="theme-select">
                     <option value="simple">Theme: Simple</option>
                     <option value="terminal">Theme: Terminal</option>
-                    <option value="retro">Theme: Retro</option>
                 </select>
             </div>
             <div class="status-item">
@@ -114,10 +114,10 @@
         
         <!-- Hero Section -->
         <section id="hero" class="hero-section">
+            <div class="hero-ambient" aria-hidden="true"></div>
             <p class="intro-line" 
                data-text-simple="Hello, I'm"
-               data-text-terminal="> initiating connection..."
-               data-text-retro="Welcome to my homepage!">
+               data-text-terminal="> initiating connection...">
                Hello, I'm
             </p>
             <h1 class="name">Fakhrusy (Fahru) Muhamad</h1>
@@ -125,28 +125,23 @@
             
             <div class="bio-block">
                 <p data-text-simple="A Full Stack generalist."
-                   data-text-terminal=">_ A Full Stack generalist."
-                   data-text-retro="A Full Stack generalist.">
+                   data-text-terminal=">_ A Full Stack generalist.">
                    A Full-stack generalist.
                 </p>
                 <p data-text-simple="Specializing in frontend and growth engineering."
-                   data-text-terminal=">_ Specializing in frontend and growth engineering."
-                   data-text-retro="Specializing in frontend and growth engineering.">
+                   data-text-terminal=">_ Specializing in frontend and growth engineering.">
                    Specializing in frontend and growth engineering.
                 </p>
                 <p data-text-simple="A lifelong learner."
-                   data-text-terminal=">_ A lifelong learner."
-                   data-text-retro="A lifelong learner.">
+                   data-text-terminal=">_ A lifelong learner.">
                    A lifelong learner.
                 </p>
                 <p data-text-simple="Exploring robotics, AI, creative programming, and computer systems."
-                   data-text-terminal=">_ Exploring robotics, AI, creative programming, and computer systems."
-                   data-text-retro="Exploring robotics, AI, creative programming, and computer systems.">
+                   data-text-terminal=">_ Exploring robotics, AI, creative programming, and computer systems.">
                    Exploring robotics, AI, creative programming, and computer systems.
                 </p>
                 <!-- <p data-text-simple="I'm also enrolled in a part-time Master of Science in Computer Science at Georgia Tech, learning about Robotics/Systems/AI."
-                   data-text-terminal=">_ I'm also enrolled in a part-time Master of Science in Computer Science at Georgia Tech, learning about Robotics/Systems/AI."
-                   data-text-retro="I'm also enrolled in a part-time Master of Science in Computer Science at Georgia Tech, learning about Robotics/Systems/AI.">
+                   data-text-terminal=">_ I'm also enrolled in a part-time Master of Science in Computer Science at Georgia Tech, learning about Robotics/Systems/AI.">
                    I'm also enrolled in a part-time Master of Science in Computer Science at Georgia Tech, learning about Robotics/Systems/AI.
                 </p> -->
             </div>
@@ -168,7 +163,7 @@
         <!-- Portal Grid -->
         <section id="portal">
             <div class="section-header reveal reveal-wipe">
-                <h3 data-text-simple="Portals" data-text-terminal="// PORTAL_ACCESS" data-text-retro="My Links">
+                <h3 data-text-simple="Portals" data-text-terminal="// PORTAL_ACCESS">
                     Portals
                 </h3>
                 <div class="section-line"></div>
@@ -184,7 +179,7 @@
                             <i class="fab fa-linux card-icon"></i>
                         </div>
                         <div class="portal-card-content">
-                            <h4 data-text-simple="Web OS Portfolio" data-text-terminal="WEB_OS_PORTFOLIO" data-text-retro="Web OS Portfolio">
+                            <h4 data-text-simple="Web OS Portfolio" data-text-terminal="WEB_OS_PORTFOLIO">
                                 Web OS Portfolio
                             </h4>
                             <p>Interactive OS-like portfolio environment.</p>
@@ -203,7 +198,7 @@
                             <i class="fas fa-cube card-icon"></i>
                         </div>
                         <div class="portal-card-content">
-                            <h4 data-text-simple="3D Lab" data-text-terminal="LAB_3D_PROJECT" data-text-retro="3D Lab">
+                            <h4 data-text-simple="3D Lab" data-text-terminal="LAB_3D_PROJECT">
                                 3D Lab
                             </h4>
                             <p>Immersive 3D portfolio with WebGL shaders & robot assistant.</p>
@@ -222,7 +217,7 @@
                             <i class="fas fa-terminal card-icon"></i>
                         </div>
                         <div class="portal-card-content">
-                            <h4 data-text-simple="Blog" data-text-terminal="BLOG_LOGS" data-text-retro="My Weblog">
+                            <h4 data-text-simple="Blog" data-text-terminal="BLOG_LOGS">
                                 Blog
                             </h4>
                             <p>Thoughts, tutorials, & musings.</p>
@@ -241,7 +236,7 @@
                             <i class="fas fa-palette card-icon"></i>
                         </div>
                         <div class="portal-card-content">
-                            <h4 data-text-simple="Creative" data-text-terminal="CREATIVE_LAB" data-text-retro="Creative Coding">
+                            <h4 data-text-simple="Creative" data-text-terminal="CREATIVE_LAB">
                                 Creative
                             </h4>
                             <p>Creative coding experiments & animations.</p>
@@ -258,7 +253,7 @@
                             <i class="fas fa-code card-icon"></i>
                         </div>
                         <div class="portal-card-content">
-                            <h4 data-text-simple="code-playground" data-text-terminal="CODE_PLAYGROUND" data-text-retro="Code Playground">
+                            <h4 data-text-simple="code-playground" data-text-terminal="CODE_PLAYGROUND">
                                 Code Playground
                             </h4>
                             <p>My own custom Code Playground, currently only supports C. Made using Codemirror.</p>
@@ -273,7 +268,7 @@
         <!-- Resume Section -->
         <section id="resume">
             <div class="section-header reveal reveal-wipe">
-                <h3 data-text-simple="Resume" data-text-terminal="// DATA_LOG: RESUME" data-text-retro="Work Experience">
+                <h3 data-text-simple="Resume" data-text-terminal="// DATA_LOG: RESUME">
                     Resume
                 </h3>
                 <div class="section-line"></div>
@@ -283,7 +278,7 @@
                 <!-- Experience Row -->
                 <div class="resume-row">
                     <div class="resume-left">
-                        <h4 data-text-simple="Experience" data-text-terminal="WORK_HISTORY" data-text-retro="Professional History">
+                        <h4 data-text-simple="Experience" data-text-terminal="WORK_HISTORY">
                             Experience
                         </h4>
                     </div>
@@ -425,7 +420,7 @@
                 <!-- Skills Row -->
                 <div class="resume-row reveal reveal-wipe">
                     <div class="resume-left">
-                        <h4 data-text-simple="Skills" data-text-terminal="SKILLS_LIST" data-text-retro="Technical Skills">
+                        <h4 data-text-simple="Skills" data-text-terminal="SKILLS_LIST">
                             Skills
                         </h4>
                     </div>
@@ -454,22 +449,19 @@
             <div class="footer-cmd">
                 <span class="cmd-icon" style="color: var(--accent); margin-right: 10px;"
                 data-text-simple="➜"
-                data-text-terminal="➜"
-                data-text-retro="i">➜</span>
+                data-text-terminal="➜">➜</span>
                 <span style="color: inherit" class="cmd-text"
                       data-text-simple="Open to opportunities — let's talk."
-                      data-text-terminal='git commit -m "update site"'
-                      data-text-retro="Designed for Internet Explorer 6.0">
+                      data-text-terminal='git commit -m "update site"'>
                       Open to opportunities — let's talk.
                 </span>
                 <span class="footer-email">hello@fahru.me</span>
             </div>
             <p>&copy; <span id="year"></span> 
-                <span data-text-simple="Fakhrusy Muhamad" data-text-terminal="FAHRU_MUHAMAD" data-text-retro="Fakhrusy Muhamad">Fakhrusy Muhamad</span> // 
+                <span data-text-simple="Fakhrusy Muhamad" data-text-terminal="FAHRU_MUHAMAD">Fakhrusy Muhamad</span> // 
                 <a href="https://github.com/mfakhrusy/portal" target="_blank" 
                    data-text-simple="Source Code"
-                   data-text-terminal="SOURCE_CODE" 
-                   data-text-retro="Source Code">Source Code</a>
+                   data-text-terminal="SOURCE_CODE">Source Code</a>
             </p>
         </footer>
     </main>

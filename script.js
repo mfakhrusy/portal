@@ -52,9 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (charIndex < textToType.length) {
             titleElement.textContent += textToType.charAt(charIndex);
             charIndex++;
-            setTimeout(typeText, 50); // Typing speed
+            setTimeout(typeText, 45);
         } else {
-            // Blinking cursor effect after typing
             setInterval(() => {
                 if (titleElement.textContent.endsWith('_')) {
                     titleElement.textContent = textToType;
@@ -65,8 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Start typing after a short delay
-    setTimeout(typeText, 500);
+    setTimeout(typeText, 450);
 
     // Real-time Clock
     const clockElement = document.getElementById('clock');
@@ -88,10 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const body = document.body;
     
     // Default to 'simple' on load (no localStorage check)
-    // The HTML structure defaults to simple, so we just ensure the dropdown matches
     themeSelect.value = 'simple';
-    // No need to updateDynamicContent('simple') here as HTML is static simple by default
-    // unless we want to be super safe against browser caching input values
+    updateDynamicContent('simple');
     
     themeSelect.addEventListener('change', (e) => {
         const selectedTheme = e.target.value;
@@ -122,8 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // =============================================
     
     const portalCards = document.querySelectorAll('.portal-card');
-    const tiltStrength = 15; // Max rotation in degrees
-    const glareOpacity = 0.15; // Glare effect intensity
+    const tiltStrength = 12; // Max rotation in degrees
+    const glareOpacity = 0.18; // Glare effect intensity
     
     portalCards.forEach(card => {
         // Add glare overlay element
@@ -147,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const rotateX = ((e.clientY - centerY) / (rect.height / 2)) * -tiltStrength;
             const rotateY = ((e.clientX - centerX) / (rect.width / 2)) * tiltStrength;
             
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
             
             // Move glare based on cursor position
             const glareX = ((e.clientX - rect.left) / rect.width) * 100;
@@ -161,16 +157,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Hero ambient parallax (subtle)
+    const heroAmbient = document.querySelector('.hero-ambient');
+    if (heroAmbient) {
+        window.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX / window.innerWidth - 0.5) * 12;
+            const moveY = (e.clientY / window.innerHeight - 0.5) * 12;
+            heroAmbient.style.transform = `translate3d(${moveX}px, ${moveY}px, 0)`;
+        });
+    }
+
     // =============================================
     // MAGNETIC HOVER EFFECT - Social Links
     // =============================================
     
-    const magneticElements = document.querySelectorAll('.social-links a');
-    const magnetStrength = 0.4; // How strongly elements follow cursor (0-1)
-    const magnetRadius = 50; // Pixel radius of magnetic effect
+    const magneticElements = document.querySelectorAll('.social-links a, .social-links button');
+    const magnetStrength = 0.35; // How strongly elements follow cursor (0-1)
     
     magneticElements.forEach(el => {
-        el.style.transition = 'transform 0.2s ease-out';
+        el.style.transition = 'transform 0.25s ease-out';
         
         el.addEventListener('mousemove', (e) => {
             const rect = el.getBoundingClientRect();
@@ -196,40 +201,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const textElements = document.querySelectorAll('[data-text-terminal]');
         
         textElements.forEach(el => {
-            if (theme === 'retro') {
-                if (el.dataset.textRetro) {
-                    el.textContent = el.dataset.textRetro;
-                }
-            } else if (theme === 'terminal') {
+            if (theme === 'terminal') {
                 if (el.dataset.textTerminal) {
                     el.textContent = el.dataset.textTerminal;
                 }
             } else {
-                // Default / Simple Theme
-                // We need to store the default text somewhere if we want to revert, 
-                // but since we are swapping, we can just use the initial HTML content as "Simple"
-                // However, once swapped, the initial content is lost.
-                // WE NEED TO FIX THIS: The initial load has the Simple text.
-                // We should add a 'data-text-simple' attribute to be safe, OR
-                // assume the HTML source *is* simple, but we need to store it before swapping.
-                
-                // Better approach: Let's assume the HTML has the simple text. 
-                // But if we are already in Terminal mode (from load), the text is already swapped?
-                // No, on load `updateDynamicContent` is called.
-                
-                // Let's add data-text-simple to all elements in HTML for robustness, 
-                // or just define them here if missing.
-                // Actually, finding the "Simple" text is tricky if we don't store it.
-                // Let's rely on a new data attribute, or just hardcode for now? 
-                // Hardcoding is bad.
-                // Let's use the 'data-text-simple' convention.
-                
                 if (el.dataset.textSimple) {
                     el.textContent = el.dataset.textSimple;
-                } else {
-                    // Fallback to what's in the DOM if we haven't swapped yet? 
-                    // No, if we swap to Terminal then back to Simple, we lose the text.
-                    // We must add data-text-simple attributes to HTML.
                 }
             }
         });

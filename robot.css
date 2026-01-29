@@ -146,14 +146,6 @@
     filter: drop-shadow(-4px 4px 12px rgba(0, 243, 255, 0.3));
 }
 
-[data-theme="retro"] .peeking-robot {
-    color: var(--accent);
-}
-
-[data-theme="retro"] .blush {
-    opacity: 0.6;
-}
-
 /* Mobile robot styles */
 @media (max-width: 768px) {
     .peeking-robot {
