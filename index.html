@@ -19,6 +19,25 @@
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Theme: pick before CSS to avoid flicker -->
+    <script>
+        (function () {
+            const themes = ['simple', 'terminal', 'sorbet', 'signal'];
+            const storageKey = 'portal-theme-rotation';
+            const lastTheme = sessionStorage.getItem(storageKey);
+            let nextTheme = themes[Math.floor(Math.random() * themes.length)];
+            if (lastTheme && themes.length > 1) {
+                let guard = 0;
+                while (nextTheme === lastTheme && guard < 10) {
+                    nextTheme = themes[Math.floor(Math.random() * themes.length)];
+                    guard++;
+                }
+            }
+            sessionStorage.setItem(storageKey, nextTheme);
+            document.documentElement.setAttribute('data-theme', nextTheme);
+        })();
+    </script>
+
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="robot.css">

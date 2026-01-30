@@ -85,20 +85,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeSelect = document.getElementById('theme-select');
     const body = document.body;
     
-    // Default to 'simple' on load (no localStorage check)
-    themeSelect.value = 'simple';
-    updateDynamicContent('simple');
+    const initialTheme = document.documentElement.getAttribute('data-theme') || 'simple';
+    if (initialTheme === 'simple') {
+        body.removeAttribute('data-theme');
+    } else {
+        body.setAttribute('data-theme', initialTheme);
+    }
+    themeSelect.value = initialTheme;
+    updateDynamicContent(initialTheme);
     
     themeSelect.addEventListener('change', (e) => {
         const selectedTheme = e.target.value;
         
         if (selectedTheme === 'simple') {
             body.removeAttribute('data-theme');
+            document.documentElement.setAttribute('data-theme', 'simple');
         } else {
             body.setAttribute('data-theme', selectedTheme);
+            document.documentElement.setAttribute('data-theme', selectedTheme);
         }
         
-        // localStorage removed as requested
         updateDynamicContent(selectedTheme);
     });
 
