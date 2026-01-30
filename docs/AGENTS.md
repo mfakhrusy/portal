@@ -42,3 +42,8 @@ This portfolio rotates between multiple themes that share the same layout but mu
 - At least 2-3 components are visibly distinct at first glance.
 - No layout breakage across screen sizes.
 - Theme still feels coherent with the overall portfolio identity.
+
+## Mobile Performance Notes
+- Disable or tone down heavy hero animations (lava layers) on mobile.
+- Prefer static gradients or reduced blur for small screens.
+- Keep motion minimal to avoid jank on low-power devices.
