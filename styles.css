@@ -56,6 +56,64 @@
     --card-shadow: none;
 }
 
+/* Sorbet Theme */
+[data-theme="sorbet"] {
+    --bg-color: #ece4b7;
+    --text-main: #2b2a2a;
+    --text-muted: #6a5b50;
+    --accent: #33ca7f;
+    --accent-dim: rgba(51, 202, 127, 0.16);
+    --accent-2: #fc9f5b;
+    --accent-2-dim: rgba(252, 159, 91, 0.2);
+    --border-color: #fbd1a2;
+    --grid-line: rgba(51, 202, 127, 0.08);
+    --surface-glow: rgba(125, 207, 182, 0.35);
+    --hero-ambient: radial-gradient(120% 120% at 10% 10%, rgba(252, 159, 91, 0.25), transparent 60%),
+        radial-gradient(140% 120% at 90% 10%, rgba(125, 207, 182, 0.35), transparent 55%);
+    --hero-stroke: linear-gradient(120deg, rgba(252, 159, 91, 0.5), rgba(51, 202, 127, 0.45));
+    --hero-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+
+    --font-mono: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    --scanline-color: transparent;
+
+    --btn-bg: rgba(255, 255, 255, 0.75);
+    --btn-border: 1px solid var(--border-color);
+    --btn-text: #2b2a2a;
+
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-shadow: 0 16px 32px -20px rgba(106, 91, 80, 0.4), 0 6px 14px -8px rgba(106, 91, 80, 0.25);
+}
+
+/* Signal Theme */
+[data-theme="signal"] {
+    --bg-color: #a2d6f9;
+    --text-main: #071f5a;
+    --text-muted: #1e4d9c;
+    --accent: #072ac8;
+    --accent-dim: rgba(7, 42, 200, 0.16);
+    --accent-2: #ffc600;
+    --accent-2-dim: rgba(255, 198, 0, 0.2);
+    --border-color: rgba(7, 42, 200, 0.25);
+    --grid-line: rgba(7, 42, 200, 0.12);
+    --surface-glow: rgba(30, 150, 252, 0.35);
+    --hero-ambient: radial-gradient(120% 120% at 12% 12%, rgba(30, 150, 252, 0.4), transparent 60%),
+        radial-gradient(140% 120% at 90% 8%, rgba(255, 198, 0, 0.35), transparent 55%);
+    --hero-stroke: linear-gradient(120deg, rgba(7, 42, 200, 0.5), rgba(255, 198, 0, 0.55));
+    --hero-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+
+    --font-mono: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    --scanline-color: transparent;
+
+    --btn-bg: rgba(255, 255, 255, 0.85);
+    --btn-border: 1px solid rgba(7, 42, 200, 0.3);
+    --btn-text: #071f5a;
+
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --card-shadow: 0 18px 40px -24px rgba(7, 42, 200, 0.45), 0 8px 16px -10px rgba(7, 42, 200, 0.25);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -88,7 +146,9 @@ body {
 }
 
 /* Terminal Background */
-[data-theme="terminal"] {
+[data-theme="terminal"],
+[data-theme="sorbet"],
+[data-theme="signal"] {
     background-image: 
         linear-gradient(var(--grid-line) 1px, transparent 1px),
         linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
@@ -141,6 +201,10 @@ body {
 
 .system-status-bar {
     background-color: rgba(248, 249, 250, 0.8); /* Translucent in Simple */
+}
+
+[data-theme="sorbet"] .system-status-bar {
+    background-color: rgba(236, 228, 183, 0.85);
 }
 
 [data-theme="terminal"] .system-status-bar {
@@ -241,6 +305,15 @@ body {
     border-radius: 0;
 }
 
+[data-theme="sorbet"] .status-badge.open-to-work {
+    background: linear-gradient(135deg, #fc9f5b 0%, #fbd1a2 100%);
+    color: #2b2a2a;
+}
+
+[data-theme="sorbet"] .status-badge.open-to-work .indicator {
+    background-color: #2b2a2a;
+}
+
 [data-theme="terminal"] .status-badge.open-to-work .indicator {
     background-color: var(--accent);
 }
@@ -327,6 +400,12 @@ a:hover {
     box-shadow: 0 0 40px rgba(0, 243, 255, 0.15);
 }
 
+[data-theme="signal"] .hero-section {
+    background: linear-gradient(160deg, rgba(7, 42, 200, 0.14), rgba(30, 150, 252, 0.22) 55%, rgba(255, 198, 0, 0.2));
+    border: 1px solid rgba(7, 42, 200, 0.32);
+    box-shadow: 0 26px 60px -30px rgba(7, 42, 200, 0.45);
+}
+
 .hero-ambient {
     position: absolute;
     inset: -20% -10% auto;
@@ -394,6 +473,10 @@ a:hover {
     font-size: 3.1rem;
     color: var(--accent);
     letter-spacing: 0;
+}
+
+[data-theme="signal"] .name {
+    color: var(--accent);
 }
 
 .name::after {
@@ -1038,6 +1121,15 @@ section {
     border-color: rgba(37, 99, 235, 0.45);
 }
 
+[data-theme="signal"] .portal-card {
+    border-color: rgba(7, 42, 200, 0.35);
+}
+
+[data-theme="signal"] .portal-card:hover {
+    box-shadow: 0 26px 50px -24px rgba(7, 42, 200, 0.4);
+    border-color: rgba(7, 42, 200, 0.55);
+}
+
 .card-glare {
     position: absolute;
     inset: 0;
@@ -1111,6 +1203,10 @@ section {
 
 [data-theme="terminal"] .portal-card-inner {
     background: transparent;
+}
+
+[data-theme="signal"] .portal-card-inner {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(162, 214, 249, 0.85));
 }
 
 .portal-card-content {
