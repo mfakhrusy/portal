@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Typing Effect for Title
     const titleElement = document.getElementById('typing-title');
-    const textToType = "Software Engineer";
+    const textToType = "Research-oriented Software Engineer";
     let charIndex = 0;
 
     function typeText() {
