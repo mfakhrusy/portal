@@ -42,6 +42,7 @@
     <link rel="stylesheet" href="styles.css">
     <!-- <link rel="stylesheet" href="robot.css"> -->
     <link rel="stylesheet" href="backpack.css">
+    <link rel="stylesheet" href="gpu-showcase.css">
     <!-- <link rel="stylesheet" href="guestbook.css"> -->
 </head>
 <body>
@@ -278,8 +279,95 @@
                     </div>
                     
                 </div>
+
+                <!-- GPU Orchestrator -->
+                <div class="portal-card info-only reveal reveal-wipe"
+                     id="gpu-showcase-trigger">
+                    <div class="portal-card-inner">
+                        <div class="card-header">
+                            <span class="card-id">#006</span>
+                            <i class="fas fa-server card-icon"></i>
+                        </div>
+                        <div class="portal-card-content">
+                            <h4 data-text-simple="GPU Orchestrator" data-text-terminal="GPU_ORCHESTRATOR">
+                                GPU Orchestrator
+                            </h4>
+                            <p>Open-source GPU orchestration platform for Kubernetes.</p>
+                            <span class="card-badge">View Project</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
+
+        <!-- GPU Orchestrator Showcase Modal -->
+        <div class="showcase-backdrop" id="showcase-backdrop"></div>
+        <div class="showcase-modal" id="showcase-modal">
+            <div class="showcase-panel">
+                <div class="showcase-header">
+                    <div class="showcase-header-left">
+                        <h2>GPU Orchestrator</h2>
+                        <p class="showcase-subtitle">Open-source GPU orchestration platform for Kubernetes — an alternative to NVIDIA Run:ai.</p>
+                    </div>
+                    <button class="showcase-close" aria-label="Close"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="showcase-body">
+                    <p class="showcase-description">
+                        A full-stack platform for managing GPU resources across multiple Kubernetes clusters.
+                        Features multi-tenant isolation, real-time GPU metrics via SSE, workload scheduling with
+                        queue management, quota enforcement, a model catalog, and a CLI tool for workload submission.
+                        Built with a simulated cluster backend for local development without real GPU hardware.
+                    </p>
+                    <div class="showcase-tags">
+                        <span>Go</span>
+                        <span>React</span>
+                        <span>TypeScript</span>
+                        <span>PostgreSQL</span>
+                        <span>TimescaleDB</span>
+                        <span>SSE</span>
+                        <span>RBAC</span>
+                    </div>
+                    <div class="showcase-carousel">
+                        <div class="carousel-viewport">
+                            <div class="carousel-slide active">
+                                <img src="screenshots/gpu-orchestrator/cluster-overview.png" alt="Dashboard" loading="lazy">
+                                <div class="carousel-caption">Dashboard — Cluster overview with real-time GPU utilization</div>
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="screenshots/gpu-orchestrator/analytics-top.png" alt="Analytics" loading="lazy">
+                                <div class="carousel-caption">Analytics — GPU utilization & memory time-series charts</div>
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="screenshots/gpu-orchestrator/workloads.png" alt="Workloads" loading="lazy">
+                                <div class="carousel-caption">Workloads — Job management with status tracking</div>
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="screenshots/gpu-orchestrator/cluster.png" alt="Clusters" loading="lazy">
+                                <div class="carousel-caption">Clusters — Multi-cluster connection management</div>
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="screenshots/gpu-orchestrator/quota-management.png" alt="Quota Management" loading="lazy">
+                                <div class="carousel-caption">Quota Management — Per-project GPU allocation</div>
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="screenshots/gpu-orchestrator/user-management.png" alt="User Management" loading="lazy">
+                                <div class="carousel-caption">User Management — RBAC with 3-tier role model</div>
+                            </div>
+                            <button class="carousel-arrow prev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+                            <button class="carousel-arrow next" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="carousel-dots">
+                            <button class="carousel-dot active" aria-label="Slide 1"></button>
+                            <button class="carousel-dot" aria-label="Slide 2"></button>
+                            <button class="carousel-dot" aria-label="Slide 3"></button>
+                            <button class="carousel-dot" aria-label="Slide 4"></button>
+                            <button class="carousel-dot" aria-label="Slide 5"></button>
+                            <button class="carousel-dot" aria-label="Slide 6"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Resume Section -->
         <section id="resume">
@@ -485,6 +573,7 @@
     <script src="script.js"></script>
     <!-- <script src="robot.js"></script> -->
     <script src="backpack.js"></script>
+    <script src="gpu-showcase.js"></script>
     <!-- <script src="guestbook.js"></script> -->
 </body>
 </html>
