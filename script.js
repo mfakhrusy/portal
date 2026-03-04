@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         updateDynamicContent(selectedTheme);
+        scheduleStickWalkerState();
     });
 
     // Accordion functionality
@@ -202,6 +203,80 @@ document.addEventListener('DOMContentLoaded', () => {
             el.style.transform = 'translate(0, 0)';
         });
     });
+
+    // Terminal hero stick walker behavior states
+    const stickWalkerTrack = document.querySelector('.hero-stick-walker');
+    const stickWalker = document.querySelector('.stick-walker');
+    let stickWalkerTimer;
+    let walkerX = -30;
+    let walkerSpeed = 34;
+    let lastWalkerTimestamp = 0;
+
+    function isTerminalThemeActive() {
+        const docTheme = document.documentElement.getAttribute('data-theme');
+        const bodyTheme = body.getAttribute('data-theme');
+        return docTheme === 'terminal' || bodyTheme === 'terminal';
+    }
+
+    function setStickWalkerState(state) {
+        if (!stickWalkerTrack) return;
+        stickWalkerTrack.classList.remove('is-running');
+        if (state === 'running') {
+            stickWalkerTrack.classList.add('is-running');
+            walkerSpeed = 68;
+            return;
+        }
+        walkerSpeed = 34;
+    }
+
+    function scheduleStickWalkerState() {
+        if (!stickWalkerTrack) return;
+        clearTimeout(stickWalkerTimer);
+
+        if (!isTerminalThemeActive()) {
+            setStickWalkerState('walking');
+            return;
+        }
+
+        const roll = Math.random();
+        let nextState = 'walking';
+        let duration = 3000 + Math.random() * 2200;
+
+        if (roll < 0.35) {
+            nextState = 'running';
+            duration = 1800 + Math.random() * 1700;
+        }
+
+        setStickWalkerState(nextState);
+        stickWalkerTimer = setTimeout(scheduleStickWalkerState, duration);
+    }
+
+    function animateStickWalker(timestamp) {
+        if (stickWalkerTrack && stickWalker && isTerminalThemeActive()) {
+            if (!lastWalkerTimestamp) {
+                lastWalkerTimestamp = timestamp;
+            }
+
+            const deltaSeconds = (timestamp - lastWalkerTimestamp) / 1000;
+            lastWalkerTimestamp = timestamp;
+
+            walkerX += walkerSpeed * deltaSeconds;
+            const loopWidth = stickWalkerTrack.clientWidth + 20;
+
+            if (walkerX > loopWidth) {
+                walkerX = -30;
+            }
+
+            stickWalker.style.left = `${walkerX}px`;
+        } else {
+            lastWalkerTimestamp = timestamp;
+        }
+
+        window.requestAnimationFrame(animateStickWalker);
+    }
+
+    scheduleStickWalkerState();
+    window.requestAnimationFrame(animateStickWalker);
 
     function updateDynamicContent(theme) {
         // Dynamic Text Content

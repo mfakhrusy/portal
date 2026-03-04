@@ -799,6 +799,90 @@ a:hover {
     opacity: 0.6;
 }
 
+.hero-stick-walker {
+    display: none;
+    --limb-duration: 0.5s;
+}
+
+[data-theme="terminal"] .social-links {
+    margin-bottom: 2rem;
+}
+
+[data-theme="terminal"] .hero-stick-walker {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40px;
+    overflow: hidden;
+    pointer-events: none;
+    color: var(--accent);
+    opacity: 0.82;
+    z-index: 0;
+}
+
+[data-theme="terminal"] .stick-walker {
+    position: absolute;
+    bottom: -5px;
+    left: -30px;
+    width: 24px;
+    height: 30px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform-box: fill-box;
+    transform-origin: center bottom;
+    animation: stick-bob 0.4s ease-in-out infinite;
+}
+
+[data-theme="terminal"] .stick-walker .limb-a,
+[data-theme="terminal"] .stick-walker .limb-b {
+    transform-box: fill-box;
+    transform-origin: center top;
+}
+
+[data-theme="terminal"] .stick-walker .limb-a {
+    animation: limb-swing-a var(--limb-duration) ease-in-out infinite;
+}
+
+[data-theme="terminal"] .stick-walker .limb-b {
+    animation: limb-swing-b var(--limb-duration) ease-in-out infinite;
+}
+
+[data-theme="terminal"] .hero-stick-walker.is-running {
+    --limb-duration: 0.24s;
+}
+
+@keyframes stick-bob {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-1.5px);
+    }
+}
+
+@keyframes limb-swing-a {
+    0%, 100% {
+        transform: rotate(14deg);
+    }
+    50% {
+        transform: rotate(-14deg);
+    }
+}
+
+@keyframes limb-swing-b {
+    0%, 100% {
+        transform: rotate(-14deg);
+    }
+    50% {
+        transform: rotate(14deg);
+    }
+}
+
 /* Section Styling */
 section {
     margin-bottom: 6rem;
@@ -1837,6 +1921,20 @@ section {
         margin-bottom: 1.5rem;
     }
 
+    [data-theme="terminal"] .social-links {
+        margin-bottom: 1.4rem;
+    }
+
+    [data-theme="terminal"] .hero-stick-walker {
+        height: 32px;
+        bottom: 0;
+    }
+
+    [data-theme="terminal"] .stick-walker {
+        width: 22px;
+        height: 28px;
+    }
+
     .resume-row {
         grid-template-columns: 1fr;
         gap: 0.5rem;
@@ -1868,6 +1966,14 @@ section {
     
     /* Reset stagger delay for single column */
     .reveal-stagger > .revealed:nth-child(even) { transition-delay: 0.15s; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-theme="terminal"] .stick-walker,
+    [data-theme="terminal"] .stick-walker .limb-a,
+    [data-theme="terminal"] .stick-walker .limb-b {
+        animation: none;
+    }
 }
 
 @media (max-width: 540px) {
