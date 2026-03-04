@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPU Orchestrator — Fahru</title>
+    <meta name="description" content="Open-source GPU orchestration platform for Kubernetes. An alternative to NVIDIA Run:ai for managing GPU resources across multiple clusters.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+
+    <!-- Fonts: JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Theme: pick before CSS to avoid flicker -->
+    <script>
+        (function () {
+            const themes = ['simple', 'terminal', 'sorbet', 'signal', 'editorial'];
+            const storageKey = 'portal-theme-rotation';
+            const lastTheme = sessionStorage.getItem(storageKey);
+            let nextTheme = themes[Math.floor(Math.random() * themes.length)];
+            if (lastTheme && themes.length > 1) {
+                let guard = 0;
+                while (nextTheme === lastTheme && guard < 10) {
+                    nextTheme = themes[Math.floor(Math.random() * themes.length)];
+                    guard++;
+                }
+            }
+            sessionStorage.setItem(storageKey, nextTheme);
+            document.documentElement.setAttribute('data-theme', nextTheme);
+        })();
+    </script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class="scanline-overlay"></div>
+    <div class="noise-overlay" aria-hidden="true"></div>
+
+    <!-- System Status Bar -->
+    <header class="system-status-bar">
+        <div class="status-left">
+            <a href="../" class="back-link" aria-label="Back to resume">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Resume</span>
+            </a>
+        </div>
+        <div class="status-right">
+            <div class="status-item">
+                <select id="theme-select" class="theme-select">
+                    <option value="simple">Theme: Simple</option>
+                    <option value="terminal">Theme: Terminal</option>
+                    <option value="sorbet">Theme: Sorbet</option>
+                    <option value="signal">Theme: Signal</option>
+                    <option value="editorial">Theme: Editorial</option>
+                </select>
+            </div>
+            <div class="status-item">
+                <span id="clock">00:00:00</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- Hero Section -->
+        <section id="hero" class="hero-section">
+            <div class="hero-ambient" aria-hidden="true"></div>
+            <p class="intro-line"
+               data-text-simple="Project"
+               data-text-terminal="> loading project...">
+                Project
+            </p>
+            <h1 class="name">GPU Orchestrator</h1>
+            <p class="project-subtitle">
+                Open-source GPU orchestration platform for Kubernetes. An alternative to NVIDIA Run:ai for managing GPU resources across multiple clusters.
+            </p>
+
+            <div class="showcase-tags hero-tags">
+                <span>Go</span>
+                <span>React</span>
+                <span>TypeScript</span>
+                <span>PostgreSQL</span>
+                <span>TimescaleDB</span>
+                <span>Python</span>
+                <span>Docker</span>
+                <span>SSE</span>
+                <span>JWT</span>
+                <span>RBAC</span>
+            </div>
+
+            <div class="social-links">
+                <a href="https://github.com/mfakhrusy/gpu-orchestrator" target="_blank" aria-label="GitHub Repository">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="../" aria-label="Back to Resume">
+                    <i class="fas fa-home"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="divider-line reveal reveal-wipe" aria-hidden="true">
+            <div class="divider-glow"></div>
+        </div>
+
+        <!-- Features Section -->
+        <section id="features">
+            <div class="section-header reveal reveal-wipe">
+                <h3 data-text-simple="Features" data-text-terminal="// FEATURE_SET">
+                    Features
+                </h3>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="features-grid reveal-stagger">
+                <div class="feature-card reveal reveal-wipe">
+                    <div class="feature-icon"><i class="fas fa-building"></i></div>
+                    <h4>Multi-Tenant</h4>
+                    <p>Organization-level isolation with tenant admins and researchers.</p>
+                </div>
+                <div class="feature-card reveal reveal-wipe">
+                    <div class="feature-icon"><i class="fas fa-network-wired"></i></div>
+                    <h4>Multi-Cluster Management</h4>
+                    <p>Connect and manage multiple GPU clusters from a single control plane.</p>
+                </div>
+                <div class="feature-card reveal reveal-wipe">
+                    <div class="feature-icon"><i class="fas fa-chart-pie"></i></div>
+                    <h4>GPU Quota Management</h4>
+                    <p>Per-project GPU allocation with enforcement.</p>
+                </div>
+                <div class="feature-card reveal reveal-wipe">
+                    <div class="feature-icon"><i class="fas fa-layer-group"></i></div>
+                    <h4>Workload Templates</h4>
+                    <p>Pre-configured environments for ML training and inference.</p>
+                </div>
+                <div class="feature-card reveal reveal-wipe">
+                    <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                    <h4>Model Catalog</h4>
+                    <p>Curated inference models — Llama, Mistral, Stable Diffusion, and more.</p>
+                </div>
+                <div class="feature-card reveal reveal-wipe">
+                    <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    <h4>Real-Time Metrics</h4>
+                    <p>Live GPU utilization, memory, and temperature via SSE.</p>
+                </div>
+                <div class="feature-card reveal reveal-wipe">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h4>Historical Metrics</h4>
+                    <p>Time-series storage with TimescaleDB for cost attribution.</p>
+                </div>
+                <div class="feature-card reveal reveal-wipe">
+                    <div class="feature-icon"><i class="fas fa-terminal"></i></div>
+                    <h4>CLI Tool</h4>
+                    <p><code>gpuorch</code> command for workload submission and monitoring.</p>
+                </div>
+                <div class="feature-card reveal reveal-wipe">
+                    <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
+                    <h4>RBAC</h4>
+                    <p>3-tier role model: platform_admin, tenant_admin, researcher.</p>
+                </div>
+                <div class="feature-card reveal reveal-wipe">
+                    <div class="feature-icon"><i class="fas fa-users-gear"></i></div>
+                    <h4>User Management</h4>
+                    <p>Admins can create, edit, deactivate, and delete users.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="divider-line reveal reveal-wipe" aria-hidden="true">
+            <div class="divider-glow"></div>
+        </div>
+
+        <!-- Screenshots Section -->
+        <section id="screenshots">
+            <div class="section-header reveal reveal-wipe">
+                <h3 data-text-simple="Screenshots" data-text-terminal="// VISUAL_LOG">
+                    Screenshots
+                </h3>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="showcase-carousel reveal reveal-wipe">
+                <div class="carousel-viewport">
+                    <div class="carousel-slide active">
+                        <img src="../screenshots/gpu-orchestrator/cluster-overview.png" alt="Dashboard — Cluster overview" loading="lazy">
+                        <div class="carousel-caption">Dashboard — Cluster overview with real-time GPU utilization</div>
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../screenshots/gpu-orchestrator/analytics-top.png" alt="Analytics" loading="lazy">
+                        <div class="carousel-caption">Analytics — GPU utilization &amp; memory time-series charts</div>
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../screenshots/gpu-orchestrator/workloads.png" alt="Workloads" loading="lazy">
+                        <div class="carousel-caption">Workloads — Job management with status tracking</div>
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../screenshots/gpu-orchestrator/cluster.png" alt="Clusters" loading="lazy">
+                        <div class="carousel-caption">Clusters — Multi-cluster connection management</div>
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../screenshots/gpu-orchestrator/quota-management.png" alt="Quota Management" loading="lazy">
+                        <div class="carousel-caption">Quota Management — Per-project GPU allocation</div>
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="../screenshots/gpu-orchestrator/user-management.png" alt="User Management" loading="lazy">
+                        <div class="carousel-caption">User Management — RBAC with 3-tier role model</div>
+                    </div>
+                    <button class="carousel-arrow prev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-arrow next" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="carousel-dots">
+                    <button class="carousel-dot active" aria-label="Slide 1"></button>
+                    <button class="carousel-dot" aria-label="Slide 2"></button>
+                    <button class="carousel-dot" aria-label="Slide 3"></button>
+                    <button class="carousel-dot" aria-label="Slide 4"></button>
+                    <button class="carousel-dot" aria-label="Slide 5"></button>
+                    <button class="carousel-dot" aria-label="Slide 6"></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="divider-line reveal reveal-wipe" aria-hidden="true">
+            <div class="divider-glow"></div>
+        </div>
+
+        <!-- Architecture Section -->
+        <section id="architecture">
+            <div class="section-header reveal reveal-wipe">
+                <h3 data-text-simple="Architecture" data-text-terminal="// SYSTEM_ARCH">
+                    Architecture
+                </h3>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="arch-block reveal reveal-wipe">
+                <div class="arch-diagram-visual" aria-label="System architecture diagram">
+                    <!-- Top row: Web UI <-> API Server -->
+                    <div class="arch-row arch-top-row">
+                        <div class="arch-node">
+                            <div class="arch-node-title">Web UI</div>
+                            <div class="arch-node-sub">React</div>
+                        </div>
+                        <div class="arch-connector-h">
+                            <span class="arch-line"></span>
+                            <span class="arch-connector-label">HTTP + SSE</span>
+                            <span class="arch-line"></span>
+                        </div>
+                        <div class="arch-node arch-node-primary">
+                            <div class="arch-node-title">API Server</div>
+                            <div class="arch-node-sub">Go</div>
+                        </div>
+                    </div>
+                    <!-- Vertical connector -->
+                    <div class="arch-connector-v"></div>
+                    <!-- Branch lines -->
+                    <div class="arch-branch"></div>
+                    <!-- Bottom row: Clusters -->
+                    <div class="arch-row arch-bottom-row">
+                        <div class="arch-node arch-node-cluster">
+                            <div class="arch-node-title">Cluster</div>
+                            <div class="arch-node-sub">:8081</div>
+                        </div>
+                        <div class="arch-node arch-node-cluster">
+                            <div class="arch-node-title">Cluster</div>
+                            <div class="arch-node-sub">:8082</div>
+                        </div>
+                        <div class="arch-node arch-node-cluster">
+                            <div class="arch-node-title">Cluster</div>
+                            <div class="arch-node-sub">:8083</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="arch-points">
+                    <div class="arch-point">
+                        <i class="fas fa-server"></i>
+                        <div>
+                            <strong>External Cluster Model</strong>
+                            <p>Control plane only — no embedded Kubernetes. Clusters run as separate services that the API server communicates with.</p>
+                        </div>
+                    </div>
+                    <div class="arch-point">
+                        <i class="fas fa-flask"></i>
+                        <div>
+                            <strong>Python Simulator</strong>
+                            <p>Development mode uses a Python simulator that generates realistic GPU metrics without requiring real hardware.</p>
+                        </div>
+                    </div>
+                    <div class="arch-point">
+                        <i class="fas fa-lock"></i>
+                        <div>
+                            <strong>JWT Auth with 3-Tier RBAC</strong>
+                            <p>Platform admins, tenant admins, and researchers — each with scoped permissions enforced at the API layer.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="divider-line reveal reveal-wipe" aria-hidden="true">
+            <div class="divider-glow"></div>
+        </div>
+
+        <!-- CLI Section -->
+        <section id="cli">
+            <div class="section-header reveal reveal-wipe">
+                <h3 data-text-simple="CLI Usage" data-text-terminal="// CLI_INTERFACE">
+                    CLI Usage
+                </h3>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="cli-block reveal reveal-wipe">
+                <pre class="cli-code"><span class="cli-comment"># Login</span>
+gpuorch login --server http://localhost:8080
+
+<span class="cli-comment"># Set context</span>
+gpuorch tenant use acme
+gpuorch cluster use my-cluster
+
+<span class="cli-comment"># Submit a training job</span>
+gpuorch submit --name llama-finetune --project llm-finetuning \
+  --template llm-finetuning --gpus 4
+
+<span class="cli-comment"># Monitor</span>
+gpuorch ps --watch
+gpuorch logs llama-finetune --follow</pre>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="terminal-footer">
+            <div class="footer-cmd">
+                <a href="../" class="back-link-footer"
+                   data-text-simple="← Back to Resume"
+                   data-text-terminal="> cd ../">
+                    ← Back to Resume
+                </a>
+            </div>
+            <p>&copy; <span id="year"></span>
+                <span data-text-simple="Fakhrusy Muhamad" data-text-terminal="FAHRU_MUHAMAD">Fakhrusy Muhamad</span> //
+                <a href="https://github.com/mfakhrusy/gpu-orchestrator" target="_blank"
+                   data-text-simple="Source Code"
+                   data-text-terminal="SOURCE_CODE">Source Code</a>
+            </p>
+        </footer>
+    </main>
+
+    <script src="./script.js"></script>
+</body>
+</html>
