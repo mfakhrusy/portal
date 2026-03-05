@@ -211,6 +211,25 @@ document.addEventListener('DOMContentLoaded', () => {
     let walkerX = -30;
     let walkerSpeed = 34;
     let lastWalkerTimestamp = 0;
+    let isSorbetBlowing = false;
+    let sorbetStopHandledThisLap = false;
+
+    const walkerStartX = -30;
+    const sorbetPauseProgress = 0.25;
+
+    function getActiveTheme() {
+        return document.documentElement.getAttribute('data-theme') || body.getAttribute('data-theme') || 'simple';
+    }
+
+    function isSorbetThemeActive() {
+        return getActiveTheme() === 'sorbet';
+    }
+
+    function setSorbetBlowingState(shouldBlow) {
+        if (!stickWalkerTrack || isSorbetBlowing === shouldBlow) return;
+        isSorbetBlowing = shouldBlow;
+        stickWalkerTrack.classList.toggle('is-blowing', shouldBlow);
+    }
 
     function filterThemeForWalker() {
         const docTheme = document.documentElement.getAttribute('data-theme');
@@ -230,6 +249,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function setStickWalkerState(state) {
         if (!stickWalkerTrack) return;
         stickWalkerTrack.classList.remove('is-running');
+        if (state === 'running' && isSorbetThemeActive()) {
+            walkerSpeed = 34;
+            return;
+        }
         if (state === 'running') {
             stickWalkerTrack.classList.add('is-running');
             walkerSpeed = 68;
@@ -268,17 +291,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const deltaSeconds = (timestamp - lastWalkerTimestamp) / 1000;
             lastWalkerTimestamp = timestamp;
+            const loopWidth = stickWalkerTrack.clientWidth + 20;
+            const loopDistance = loopWidth - walkerStartX;
+            const sorbetStopX = walkerStartX + loopDistance * sorbetPauseProgress;
+
+            if (isSorbetThemeActive()) {
+                const reachedSorbetStop = !sorbetStopHandledThisLap && walkerX >= sorbetStopX;
+                if (reachedSorbetStop) {
+                    walkerX = sorbetStopX;
+                    sorbetStopHandledThisLap = true;
+                    setSorbetBlowingState(true);
+                }
+
+                if (sorbetStopHandledThisLap) {
+                    stickWalker.style.left = `${walkerX}px`;
+                    stickWalkerTrack.style.setProperty('--walker-x', `${walkerX}px`);
+                    window.requestAnimationFrame(animateStickWalker);
+                    return;
+                }
+            } else {
+                sorbetStopHandledThisLap = false;
+                setSorbetBlowingState(false);
+            }
 
             walkerX += walkerSpeed * deltaSeconds;
-            const loopWidth = stickWalkerTrack.clientWidth + 20;
 
             if (walkerX > loopWidth) {
-                walkerX = -30;
+                walkerX = walkerStartX;
+                sorbetStopHandledThisLap = false;
+                setSorbetBlowingState(false);
             }
 
             stickWalker.style.left = `${walkerX}px`;
+            stickWalkerTrack.style.setProperty('--walker-x', `${walkerX}px`);
         } else {
             lastWalkerTimestamp = timestamp;
+            sorbetStopHandledThisLap = false;
+            setSorbetBlowingState(false);
+            if (stickWalkerTrack) {
+                stickWalkerTrack.style.setProperty('--walker-x', `${walkerStartX}px`);
+            }
         }
 
         window.requestAnimationFrame(animateStickWalker);
