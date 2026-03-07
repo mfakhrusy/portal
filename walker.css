@@ -98,11 +98,11 @@
 }
 
 [data-theme="sorbet"] .hero-stick-walker.is-blowing .stick-walker .leg-b {
-    transform: rotate(2deg);
+    transform: rotate(24deg);
 }
 
 [data-theme="sorbet"] .hero-stick-walker.is-blowing .stick-walker .leg-a {
-    transform: rotate(-34deg);
+    transform: rotate(-18deg);
 }
 
 [data-theme="sorbet"] .hero-stick-walker.is-blowing .stick-walker .arm-a {
