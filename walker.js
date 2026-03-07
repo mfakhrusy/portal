@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const stickWalkerTrack = document.querySelector('.hero-stick-walker');
     const stickWalker = document.querySelector('.stick-walker');
     const sorbetBubbles = document.querySelectorAll('.sorbet-bubble');
+    const asciiWorm = document.querySelector('.ascii-worm');
 
     if (!stickWalkerTrack || !stickWalker) {
         return;
@@ -16,6 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let isSorbetBlowing = false;
     let sorbetStopHandledThisLap = false;
     let gaitPhase = 0;
+    let wormAttemptedThisLap = false;
+    let wormActive = false;
+    let wormStartMs = 0;
+    let wormX = 0;
+    let wormFrameIndex = 0;
+    let wormFrameTimerMs = 0;
+    let wormLastUpdateMs = 0;
 
     const walkerStartX = -30;
     const sorbetPauseProgress = 0.25;
@@ -29,6 +37,84 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     const FULL_TURN = Math.PI * 2;
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const wormBaseFrames = [
+        "  _/\\__/\\__(o>",
+        " _/\\__/\\___(O>",
+        "  _/\\__/\\__(o>",
+        " _/\\__/\\___(0>"
+    ];
+    const wormChompFrames = [
+        "  _/\\__/\\__( 0>",
+        " _/\\__/\\___( 0>",
+        "  _/\\__/\\__( 0>"
+    ];
+
+    function isTerminalThemeActive() {
+        return getActiveTheme() === 'terminal';
+    }
+
+    function setWormActive(active, timestampMs = 0) {
+        if (!asciiWorm) return;
+        wormActive = active;
+        stickWalkerTrack.classList.toggle('worm-active', active);
+
+        if (!active) {
+            asciiWorm.textContent = '';
+            return;
+        }
+
+        wormStartMs = timestampMs;
+        wormFrameTimerMs = timestampMs;
+        wormLastUpdateMs = timestampMs;
+        wormFrameIndex = 0;
+        asciiWorm.textContent = wormBaseFrames[0];
+    }
+
+    function maybeTriggerWormAttack(progress, timestampMs) {
+        if (!asciiWorm || reducedMotionQuery.matches || !isTerminalThemeActive() || wormActive || wormAttemptedThisLap) {
+            return;
+        }
+
+        if (progress < 0.3) {
+            return;
+        }
+
+        wormAttemptedThisLap = true;
+        wormX = walkerStartX;
+        setWormActive(true, timestampMs);
+    }
+
+    function updateWormVisual(timestampMs) {
+        if (!asciiWorm) return;
+
+        if (!wormActive || !isTerminalThemeActive() || reducedMotionQuery.matches) {
+            setWormActive(false);
+            return;
+        }
+
+        const deltaSeconds = Math.max(0, (timestampMs - wormLastUpdateMs) / 1000);
+        wormLastUpdateMs = timestampMs;
+        const distanceFromBack = walkerX - wormX;
+        const distanceToWalker = Math.abs(distanceFromBack);
+        const shouldChomp = distanceToWalker < 30;
+        const frames = shouldChomp ? wormChompFrames : wormBaseFrames;
+        const frameTickMs = shouldChomp ? 70 : 95;
+
+        const slitherSpeed = Math.max(walkerSpeed + 10, shouldChomp ? 82 : 46);
+        wormX += slitherSpeed * deltaSeconds;
+
+        if (timestampMs - wormFrameTimerMs > frameTickMs) {
+            wormFrameIndex = (wormFrameIndex + 1) % frames.length;
+            wormFrameTimerMs = timestampMs;
+        }
+
+        asciiWorm.textContent = frames[wormFrameIndex];
+        const bobY = Math.sin((timestampMs - wormStartMs) * 0.015) * 1.5;
+        asciiWorm.style.left = `${wormX}px`;
+        asciiWorm.style.transform = `translate3d(0, ${bobY.toFixed(2)}px, 0)`;
+
+        // Worm keeps chasing until lap reset/theme change.
+    }
 
     function setWalkerPose(armA, armB, legA, legB) {
         stickWalker.style.setProperty('--walker-arm-a-angle', `${armA.toFixed(2)}deg`);
@@ -174,6 +260,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const loopWidth = stickWalkerTrack.clientWidth + 20;
             const loopDistance = loopWidth - walkerStartX;
             const sorbetStopX = walkerStartX + loopDistance * sorbetPauseProgress;
+            const loopProgress = Math.max(0, Math.min(1, (walkerX - walkerStartX) / loopDistance));
+
+            maybeTriggerWormAttack(loopProgress, timestamp);
 
             if (isSorbetThemeActive()) {
                 const reachedSorbetStop = !sorbetStopHandledThisLap && walkerX >= sorbetStopX;
@@ -197,11 +286,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             walkerX += walkerSpeed * deltaSeconds;
             updateProceduralGait(deltaSeconds);
+            updateWormVisual(timestamp);
 
             if (walkerX > loopWidth) {
                 walkerX = walkerStartX;
                 sorbetStopHandledThisLap = false;
                 setSorbetBlowingState(false);
+                wormAttemptedThisLap = false;
+                setWormActive(false);
             }
 
             stickWalker.style.left = `${walkerX}px`;
@@ -213,6 +305,8 @@ document.addEventListener('DOMContentLoaded', () => {
             stickWalker.style.left = `${walkerStartX}px`;
             stickWalkerTrack.style.setProperty('--walker-x', `${walkerStartX}px`);
             resetWalkerPose();
+            wormAttemptedThisLap = false;
+            setWormActive(false);
         }
 
         window.requestAnimationFrame(animateStickWalker);
