@@ -56,16 +56,28 @@
     transform-origin: center top;
 }
 
-[data-theme="terminal"] .stick-walker .limb-a,
-[data-theme="sorbet"] .stick-walker .limb-a,
-[data-theme="signal"] .stick-walker .limb-a {
-    animation: limb-swing-a var(--limb-duration) ease-in-out infinite;
+[data-theme="terminal"] .stick-walker .arm-a,
+[data-theme="sorbet"] .stick-walker .arm-a,
+[data-theme="signal"] .stick-walker .arm-a {
+    transform: rotate(var(--walker-arm-a-angle, 14deg));
 }
 
-[data-theme="terminal"] .stick-walker .limb-b,
-[data-theme="sorbet"] .stick-walker .limb-b,
-[data-theme="signal"] .stick-walker .limb-b {
-    animation: limb-swing-b var(--limb-duration) ease-in-out infinite;
+[data-theme="terminal"] .stick-walker .arm-b,
+[data-theme="sorbet"] .stick-walker .arm-b,
+[data-theme="signal"] .stick-walker .arm-b {
+    transform: rotate(var(--walker-arm-b-angle, -36deg));
+}
+
+[data-theme="terminal"] .stick-walker .leg-a,
+[data-theme="sorbet"] .stick-walker .leg-a,
+[data-theme="signal"] .stick-walker .leg-a {
+    transform: rotate(var(--walker-leg-a-angle, -14deg));
+}
+
+[data-theme="terminal"] .stick-walker .leg-b,
+[data-theme="sorbet"] .stick-walker .leg-b,
+[data-theme="signal"] .stick-walker .leg-b {
+    transform: rotate(var(--walker-leg-b-angle, 18deg));
 }
 
 [data-theme="terminal"] .hero-stick-walker.is-running,
@@ -201,42 +213,6 @@
     }
     75% {
         transform: translateY(-2px);
-    }
-}
-
-@keyframes limb-swing-a {
-    0% {
-        transform: rotate(22deg);
-    }
-    25% {
-        transform: rotate(8deg);
-    }
-    50% {
-        transform: rotate(-22deg);
-    }
-    75% {
-        transform: rotate(-8deg);
-    }
-    100% {
-        transform: rotate(22deg);
-    }
-}
-
-@keyframes limb-swing-b {
-    0% {
-        transform: rotate(-22deg);
-    }
-    25% {
-        transform: rotate(-8deg);
-    }
-    50% {
-        transform: rotate(22deg);
-    }
-    75% {
-        transform: rotate(8deg);
-    }
-    100% {
-        transform: rotate(-22deg);
     }
 }
 

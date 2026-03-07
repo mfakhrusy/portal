@@ -11,9 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let stickWalkerTimer;
     let walkerX = -30;
     let walkerSpeed = 34;
+    let walkerState = 'walking';
     let lastWalkerTimestamp = 0;
     let isSorbetBlowing = false;
     let sorbetStopHandledThisLap = false;
+    let gaitPhase = 0;
 
     const walkerStartX = -30;
     const sorbetPauseProgress = 0.25;
@@ -25,6 +27,55 @@ document.addEventListener('DOMContentLoaded', () => {
     const bubbleDelayByIndex = Array.from({ length: sorbetBubbles.length }, (_, index) => {
         return index * bubbleDelayStep + Math.random() * bubbleDelayJitter;
     });
+    const FULL_TURN = Math.PI * 2;
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function setWalkerPose(armA, armB, legA, legB) {
+        stickWalker.style.setProperty('--walker-arm-a-angle', `${armA.toFixed(2)}deg`);
+        stickWalker.style.setProperty('--walker-arm-b-angle', `${armB.toFixed(2)}deg`);
+        stickWalker.style.setProperty('--walker-leg-a-angle', `${legA.toFixed(2)}deg`);
+        stickWalker.style.setProperty('--walker-leg-b-angle', `${legB.toFixed(2)}deg`);
+    }
+
+    function resetWalkerPose() {
+        setWalkerPose(14, -36, -14, 18);
+    }
+
+    function updateProceduralGait(deltaSeconds) {
+        if (reducedMotionQuery.matches) {
+            resetWalkerPose();
+            return;
+        }
+
+        if (isSorbetBlowing) return;
+
+        const isRunning = walkerState === 'running';
+        const stepFrequency = isRunning ? 3.8 : 2.2;
+        gaitPhase = (gaitPhase + deltaSeconds * FULL_TURN * stepFrequency) % FULL_TURN;
+
+        const stride = Math.sin(gaitPhase);
+        const leadLift = Math.max(0, Math.sin(gaitPhase));
+        const trailLift = Math.max(0, Math.sin(gaitPhase + Math.PI));
+        const armWave = Math.sin(gaitPhase + (isRunning ? 0.36 : 0.28));
+        const armReachDamping = 1 - Math.abs(stride) * 0.18;
+
+        if (isRunning) {
+            const armSwing = 24 * armReachDamping;
+            const armA = 10 - armWave * armSwing + trailLift * 3;
+            const armB = -32 + armWave * armSwing + leadLift * 3;
+            const legA = -14 + stride * 34 - leadLift * 12;
+            const legB = 16 - stride * 34 - trailLift * 12;
+            setWalkerPose(armA, armB, legA, legB);
+            return;
+        }
+
+        const armSwing = 16 * armReachDamping;
+        const armA = 10 - armWave * armSwing + trailLift * 2;
+        const armB = -30 + armWave * armSwing + leadLift * 2;
+        const legA = -12 + stride * 22 - leadLift * 8;
+        const legB = 16 - stride * 22 - trailLift * 8;
+        setWalkerPose(armA, armB, legA, legB);
+    }
 
     function getActiveTheme() {
         return document.documentElement.getAttribute('data-theme') || body.getAttribute('data-theme') || 'simple';
@@ -79,9 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setStickWalkerState(state) {
         stickWalkerTrack.classList.remove('is-running');
+        walkerState = 'walking';
 
         if (state === 'running' && !isSorbetThemeActive()) {
             stickWalkerTrack.classList.add('is-running');
+            walkerState = 'running';
             walkerSpeed = 68;
             return;
         }
@@ -131,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (sorbetStopHandledThisLap) {
+                    updateProceduralGait(deltaSeconds);
                     stickWalker.style.left = `${walkerX}px`;
                     stickWalkerTrack.style.setProperty('--walker-x', `${walkerX}px`);
                     window.requestAnimationFrame(animateStickWalker);
@@ -142,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             walkerX += walkerSpeed * deltaSeconds;
+            updateProceduralGait(deltaSeconds);
 
             if (walkerX > loopWidth) {
                 walkerX = walkerStartX;
@@ -157,6 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setSorbetBlowingState(false);
             stickWalker.style.left = `${walkerStartX}px`;
             stickWalkerTrack.style.setProperty('--walker-x', `${walkerStartX}px`);
+            resetWalkerPose();
         }
 
         window.requestAnimationFrame(animateStickWalker);
@@ -164,6 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('themechange', scheduleStickWalkerState);
 
+    resetWalkerPose();
     scheduleStickWalkerState();
     window.requestAnimationFrame(animateStickWalker);
 });
